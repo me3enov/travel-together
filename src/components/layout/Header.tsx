@@ -1,21 +1,24 @@
 "use client";
 
-import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import HomeButton from '../shared/HomeButton';
+import Token from '../shared/Token';
+import { RootState } from '../../store';
 
-interface HeaderProps {
-  showHomeButton?: boolean;
-}
+const Header = ({ showHomeButton }: { showHomeButton: boolean }) => {
+    const tokens = useSelector((state: RootState) => state.player.tokens);
 
-const Header = ({ showHomeButton = false }: HeaderProps) => (
-  <header className="w-full p-4">
-    {showHomeButton && (
-      <div className="flex justify-start">
-        <a href="/" className="hover:opacity-80 transition">
-          <Image src="/icons/home.svg" alt="Home" width={32} height={32} />
-        </a>
-      </div>
-    )}
-  </header>
-);
+    return (
+        <header className="w-full flex justify-between items-center p-4 bg-transparent absolute top-0 left-0 z-50">
+            {showHomeButton && <HomeButton onClick={() => console.log("Go Home")} />}
+            {showHomeButton && (
+                <div className="flex space-x-4">
+                    <Token value={1} count={tokens.first} />
+                    <Token value={2} count={tokens.second} />
+                </div>
+            )}
+        </header>
+    );
+};
 
 export default Header;

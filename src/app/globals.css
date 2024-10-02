@@ -9,7 +9,9 @@
   --secondary-color: #C3C3C3;
   --hover-primary-color: #66D9EF;
   --text-color: #5A5A5A;
+  --white-color: #FFFFFF;
   --header-text-color: #424242;
+  --token-background-color: #E4F5FF;
 }
 
 @media (prefers-color-scheme: dark) {
