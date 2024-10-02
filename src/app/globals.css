@@ -5,6 +5,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-color: #39C1F8;
+  --secondary-color: #C3C3C3;
+  --hover-primary-color: #66D9EF;
+  --text-color: #5A5A5A;
+  --header-text-color: #424242;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,11 +22,20 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif; /* Подключаем шрифт Poppins */
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .bg-size-200 {
+    background-size: 200%;
+  }
+  .bg-pos-0 {
+    background-position: 0 0;
+  }
+  .bg-right-200 {
+    background-position: 100% 0;
   }
 }
