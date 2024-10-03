@@ -6,13 +6,13 @@ import Token from '../shared/Token';
 import { RootState } from '../../store';
 
 const Header = ({ showHomeButton }: { showHomeButton: boolean }) => {
-    const tokens = useSelector((state: RootState) => state.player.tokens);
+    const tokens = useSelector((state: RootState) => state.token.availableTokens); // Теперь используем `availableTokens`
 
     return (
         <header className="w-full flex justify-between items-center p-4 bg-transparent absolute top-0 left-0 z-50">
             {showHomeButton && <HomeButton onClick={() => console.log("Go Home")} />}
             {showHomeButton && (
-                <div className="flex space-x-4">
+                <div className="flex space-x-8">
                     <Token value={1} count={tokens.first} />
                     <Token value={2} count={tokens.second} />
                 </div>
