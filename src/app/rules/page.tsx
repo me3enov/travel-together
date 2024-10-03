@@ -1,13 +1,14 @@
-"use client";
+"use client";  // Убедись, что директива установлена
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';  // Импортируем роутер для клиента
 import RulesPopup from '../../components/rules/RulesPopup';
 
 const RulesPage = () => {
-    const router = useRouter();
+    const router = useRouter();  // Здесь безопасно использовать роутер
 
     const handleStart = () => {
-        router.push('/round');
+        // Перенаправляем на первый мини-раунд (Round 1, Selection 1)
+        router.push('/round/1/1');
     };
 
     return (

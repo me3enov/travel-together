@@ -1,6 +1,6 @@
-"use client";
+"use client";  // Убедимся, что это клиентский компонент
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';  // Импортируем правильную версию useRouter
 import Button from '../shared/Button';
 import RulesContent from './RulesContent';
 
@@ -8,7 +8,8 @@ const RulesPopup = () => {
     const router = useRouter();
 
     const handleStart = () => {
-        router.push("/round");
+        // Переход на первый минираунд (Round 1, Selection 1)
+        router.push('/round/1/1');
     };
 
     return (

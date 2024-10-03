@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface RoundState {
     currentRound: number;
@@ -25,11 +25,11 @@ const roundSlice = createSlice({
             state.currentRound += 1;
             state.currentSelection = 1; // Сбрасываем счетчик выбора
         },
-        setCategory: (state, action: PayloadAction<string>) => {
+        setCategory: (state, action) => {
             state.category = action.payload;
         },
         resetRoundState: (state) => {
-            // Сбрасываем состояние раунда (например, для нового раунда)
+            // Сбрасываем состояние раунда
             state.currentRound = 1;
             state.currentSelection = 1;
             state.category = 'Location';

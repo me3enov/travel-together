@@ -1,3 +1,5 @@
+import React from 'react';
+import { motion } from 'framer-motion';
 import Card from './Card';
 
 interface CardListProps {
@@ -5,20 +7,34 @@ interface CardListProps {
     cards: { name: string; imagePath: string }[];
 }
 
-const CardList: React.FC<CardListProps> = ({ category, cards }) => {
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2, // Задержка между анимацией каждого элемента
+        },
+    },
+};
+
+const CardList: React.FC<CardListProps> = ({ cards }) => {
     return (
-        <div className="w-full flex flex-col items-center space-y-8 px-4 sm:px-8 lg:px-16">
-            <div className="flex flex-wrap justify-center gap-y-8 gap-x-4 sm:gap-x-6 lg:gap-x-8">
-                {cards.map((card, index) => (
+        <motion.div
+            className="w-full flex flex-col items-center space-y-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <div className="flex flex-wrap justify-center space-x-4">
+                {cards.map((card) => (
                     <Card
                         key={card.name}
                         name={card.name}
                         imagePath={card.imagePath}
-                        index={index}  // Передаем индекс для поочередной анимации
                     />
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
