@@ -6,10 +6,10 @@ import Token from '../shared/Token';
 import { RootState } from '../../store';
 
 const Header = ({ showHomeButton }: { showHomeButton: boolean }) => {
-    const tokens = useSelector((state: RootState) => state.token.availableTokens); // Теперь используем `availableTokens`
+    const tokens = useSelector((state: RootState) => state.token.availableTokens);
 
     return (
-        <header className="w-full flex justify-between items-center p-4 bg-transparent absolute top-0 left-0 z-50">
+        <header className="w-full h-16 flex justify-between items-center p-4 bg-transparent fixed top-0 left-0 z-50"> {/* Высота 16 = 4rem */}
             {showHomeButton && <HomeButton onClick={() => console.log("Go Home")} />}
             {showHomeButton && (
                 <div className="flex space-x-8">

@@ -57,8 +57,14 @@ const tokenSlice = createSlice({
 
             card.token = null; // Снимаем токен с карточки
         },
+        resetTokens: (state) => {
+            // Сбрасываем токены для всех карточек и возвращаем доступные токены
+            state.cards.forEach(card => card.token = null);
+            state.availableTokens.first = 1;
+            state.availableTokens.second = 1;
+        },
     },
 });
 
-export const { initializeCards, placeToken, removeToken } = tokenSlice.actions;
+export const { initializeCards, placeToken, removeToken, resetTokens } = tokenSlice.actions;
 export default tokenSlice.reducer;
