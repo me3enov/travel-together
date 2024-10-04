@@ -1,6 +1,11 @@
 import { motion } from 'framer-motion';
 
-const RoundHeader = ({ roundTitle, subtitle }: { roundTitle: string, subtitle: string }) => {
+interface RoundHeaderProps {
+    roundTitle: string;
+    subtitle: string;
+}
+
+const RoundHeader: React.FC<RoundHeaderProps> = ({ roundTitle, subtitle }) => {
     return (
         <motion.div
             className="flex flex-col items-center space-y-2"
@@ -14,7 +19,7 @@ const RoundHeader = ({ roundTitle, subtitle }: { roundTitle: string, subtitle: s
                 animate={{ opacity: 1, scale: 1 }}     // Конечная анимация
                 transition={{ delay: 0.4, duration: .5 }}  // Задержка перед появлением заголовка
             >
-                {roundTitle} - {subtitle}
+                {roundTitle}
             </motion.h2>
             <motion.p
                 className="text-lg text-center"
@@ -22,7 +27,7 @@ const RoundHeader = ({ roundTitle, subtitle }: { roundTitle: string, subtitle: s
                 animate={{ opacity: 1, y: 0 }}    // Конечное состояние
                 transition={{ delay: 0.4, duration: .5 }}  // Задержка перед появлением текста
             >
-                Please select the 2 most preferred options
+                {subtitle}
             </motion.p>
         </motion.div>
     );
