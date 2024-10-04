@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeCards, setTokensByRoundType, placeToken, removeToken } from '../../../../store/slices/tokenSlice';
+import { initializeCards, placeToken, removeToken, setTokensByRoundType } from '../../../../store/slices/tokenSlice';
 import { RootState } from '../../../../store';
 import Header from '../../../../components/layout/Header';
 import Footer from '../../../../components/layout/Footer';
@@ -11,8 +11,8 @@ import CardList from '../../../../components/game/CardList';
 import RoundHeader from '../../../../components/game/RoundHeader';
 import Button from '../../../../components/shared/Button';
 import cardsData from '../../../../../public/data/cards.json';
+import { loadFromLocalStorage, saveToLocalStorage, moveTempToPermanentStorage } from '../../../../utils/localStorage';
 import { motion } from 'framer-motion';
-import { addCardToTempStorage, moveTempToPermanentStorage } from '../../../../utils/localStorage'; // Импортируем функции работы с localStorage
 
 const RoundPage = () => {
     const dispatch = useDispatch();
@@ -38,6 +38,7 @@ const RoundPage = () => {
 
         // Устанавливаем токены в зависимости от раунда (обычный или спасение)
         dispatch(setTokensByRoundType({ round: parseInt(round), isRescue: false })); // Здесь round: обычный, не этап спасения
+
     }, [dispatch, selection, currentPreferences, round]);
 
     const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
@@ -57,25 +58,36 @@ const RoundPage = () => {
     const handleNextClick = () => {
         const nextSelection = parseInt(selection) + 1;
 
-        // Сохраняем карточки текущего раунда в временное хранилище
+        // Если это первый минираунд (например, 1.1, 2.1 и т.д.), то переносим временное хранилище в постоянное
+        if (selection === '1') {
+            // Переносим временные данные в постоянное хранилище
+            moveTempToPermanentStorage();
+            // Очищаем временное хранилище
+            saveToLocalStorage('tempCards', []);
+        }
+
+        // Сохраняем карточки текущего минираунда во временное хранилище
         cards.forEach(card => {
             const fullCardData = currentPreferences[parseInt(selection) - 1].options.find(option => option.name === card.name);
-            addCardToTempStorage({
+            const newCard = {
                 name: card.name,
                 imagePath: fullCardData ? fullCardData.imagePath : null,
                 main: round === "1", // Является ли это первым раундом (preferences)
                 category: currentPreferences[parseInt(selection) - 1].category,
                 tokenPlaced: card.token !== null, // Установлен ли токен
                 score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
-            });
+            };
+
+            // Добавляем карточки во временное хранилище
+            const existingTempCards = loadFromLocalStorage('tempCards') || [];
+            saveToLocalStorage('tempCards', [...existingTempCards, newCard]);
         });
 
         if (nextSelection <= totalCategories) {
             // Переходим на следующий минираунд
             router.push(`/round/${round}/${nextSelection}`);
         } else if (round === "1") {
-            // Переносим данные из временного хранилища в постоянное после первого раунда
-            moveTempToPermanentStorage();
+            // Переход ко 2 раунду после 1
             router.push(`/round/2/1`);
         } else {
             // Переход на этап спасения после 2 и 3 раундов
@@ -90,10 +102,9 @@ const RoundPage = () => {
             <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
                 <RoundHeader
                     roundTitle={`Round ${round}.${selection}`}
-                    subtitle={`Please select the ${tokens.first + tokens.second} most preferred options`}
+                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `Please select the ${tokens.first + tokens.second} most preferred options`}
                 />
 
-                {/* Передаем карточки с путем к изображению и функцией для установки токена */}
                 <CardList
                     category={currentPreferences[parseInt(selection) - 1].category}
                     cards={cards.map(card => ({

@@ -10,7 +10,7 @@ import Footer from '../../../../components/layout/Footer';
 import CardList from '../../../../components/game/CardList';
 import RoundHeader from '../../../../components/game/RoundHeader';
 import Button from '../../../../components/shared/Button';
-import { loadFromLocalStorage, moveTempToPermanentStorage } from '../../../../utils/localStorage';
+import { loadFromLocalStorage, saveToLocalStorage } from '../../../../utils/localStorage'; // Заменили moveTempToPermanentStorage
 import { motion } from 'framer-motion';
 
 const RescuePage = () => {
@@ -45,7 +45,27 @@ const RescuePage = () => {
     };
 
     const handleNextClick = () => {
-        moveTempToPermanentStorage();
+        // Обновляем временное хранилище только для карточек, которые получили токены
+        const updatedCards = cards.filter(card => card.token !== null).map(card => ({
+            name: card.name,
+            token: card.token,
+            score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
+            tokenPlaced: true, // Обновляем, что на карточке установлен токен
+        }));
+
+        // Сохраняем обновленные карточки в временное хранилище
+        const existingTempCards = loadFromLocalStorage('tempCards') || [];
+        const newTempCards = existingTempCards.map((tempCard: any) => {
+            const updatedCard = updatedCards.find((card: any) => card.name === tempCard.name);
+            return updatedCard ? { ...tempCard, ...updatedCard } : tempCard;
+        });
+
+        // Добавляем новые карточки, если их еще нет в хранилище
+        const finalTempCards = [...newTempCards, ...updatedCards.filter(card => !newTempCards.some((tempCard: any) => tempCard.name === card.name))];
+
+        saveToLocalStorage('tempCards', finalTempCards);
+
+        // Переход на следующий раунд
         const nextRound = parseInt(round) + 1;
         router.push(`/round/${nextRound}/1`);
     };
@@ -57,7 +77,7 @@ const RescuePage = () => {
             <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
                 <RoundHeader
                     roundTitle={`Round ${round} - Last chance to save them`}
-                    subtitle="Select cards to save"
+                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `Please select the ${tokens.first + tokens.second} most preferred options`}
                 />
 
                 <CardList category="Rescue" cards={cards} onTokenPlace={handleTokenPlace} />
