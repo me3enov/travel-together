@@ -43,3 +43,23 @@ export const moveTempToPermanentStorage = () => {
     // Очищаем временное хранилище
     saveToLocalStorage('tempCards', []);
 };
+
+// Функция для сохранения перемешанных карточек
+export const saveShuffledCardsToStorage = (shuffledCards: any[]) => {
+    const rounds = [];
+
+    // Разбиваем перемешанные карточки на минираунды по 4 карточки
+    for (let i = 0; i < shuffledCards.length; i += 4) {
+        rounds.push({
+            category: `all-${Math.ceil((i + 1) / 4)}`, // Генерируем категорию для каждого минираунда
+            options: shuffledCards.slice(i, i + 4),
+        });
+    }
+
+    saveToLocalStorage('shuffledRounds', rounds);
+};
+
+// Загрузка перемешанных карточек
+export const loadShuffledRoundsFromStorage = () => {
+    return loadFromLocalStorage('shuffledRounds');
+};

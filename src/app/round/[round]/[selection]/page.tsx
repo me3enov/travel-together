@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeCards, placeToken, removeToken, setTokensByRoundType } from '../../../../store/slices/tokenSlice';
@@ -11,7 +11,7 @@ import CardList from '../../../../components/game/CardList';
 import RoundHeader from '../../../../components/game/RoundHeader';
 import Button from '../../../../components/shared/Button';
 import cardsData from '../../../../../public/data/cards.json';
-import { loadFromLocalStorage, saveToLocalStorage, moveTempToPermanentStorage } from '../../../../utils/localStorage';
+import { loadFromLocalStorage, saveToLocalStorage, moveTempToPermanentStorage, saveShuffledCardsToStorage, loadShuffledRoundsFromStorage } from '../../../../utils/localStorage';
 import { motion } from 'framer-motion';
 
 const RoundPage = () => {
@@ -21,24 +21,51 @@ const RoundPage = () => {
     const { round, selection } = params;
     const tokens = useSelector((state: RootState) => state.token.availableTokens);
     const cards = useSelector((state: RootState) => state.token.cards);
+    const [shuffledCards, setShuffledCards] = useState<any[]>([]); // Для перемешанных карточек
 
-    // Определяем текущий раунд и категории для него
     const currentPreferences = round === "1" ? cardsData.preferences : cardsData.leisureCategories;
-    const totalCategories = currentPreferences.length;
 
     useEffect(() => {
-        const selectedCategory = currentPreferences[parseInt(selection) - 1]; // Текущая категория
-        const cardNames = selectedCategory?.options.map(option => ({
-            name: option.name,
-            imagePath: option.imagePath, // Извлекаем путь к изображению из JSON
-        }));
+        const tmp = loadFromLocalStorage('tempCards');
+        const sh = loadShuffledRoundsFromStorage();
+        const pe = loadFromLocalStorage('permanentCards');
+        console.log('временное: ', {round, selection, tmp});
+        console.log('шафл: ', {round, selection, sh});
+        console.log('постоянное: ', {round, selection, pe});
 
-        // Инициализируем карточки в Redux только с именем (токены через Redux)
-        dispatch(initializeCards(cardNames.map(card => card.name) || []));
+        if (round === "1" || round === "2") {
+            // Для первых двух раундов берем карточки из JSON
+            const selectedCategory = currentPreferences[parseInt(selection) - 1];
+            const cardNames = selectedCategory?.options.map(option => ({
+                name: option.name,
+                imagePath: option.imagePath,
+            }));
+            dispatch(initializeCards(cardNames.map(card => card.name) || []));
+        } else {
+            // Для последующих раундов берем перемешанные карточки из временного хранилища
+            let shuffledRounds = loadShuffledRoundsFromStorage();
+            if (selection === '1') {
+                // Если это первый минираунд и в хранилище уже есть перемешанные карточки, очищаем его
+                saveToLocalStorage('shuffledRounds', []);
+                shuffledRounds = [];
+            }
 
-        // Устанавливаем токены в зависимости от раунда (обычный или спасение)
-        dispatch(setTokensByRoundType({ round: parseInt(round), isRescue: false })); // Здесь round: обычный, не этап спасения
+            if (!shuffledRounds || shuffledRounds.length === 0) {
+                const tempCards = loadFromLocalStorage('tempCards')?.filter((card: any) => card.tokenPlaced) || [];
+                const shuffled = [...tempCards].sort(() => 0.5 - Math.random());
 
+                // Сохраняем перемешанные карточки в виде минираундов
+                saveShuffledCardsToStorage(shuffled);
+                shuffledRounds = loadShuffledRoundsFromStorage();
+            }
+
+            const currentRound = shuffledRounds[parseInt(selection) - 1];
+            dispatch(initializeCards(currentRound.options.map((card: any) => card.name)));
+            setShuffledCards(currentRound.options);
+        }
+
+        // Устанавливаем токены в зависимости от раунда
+        dispatch(setTokensByRoundType({ round: parseInt(round), isRescue: false }));
     }, [dispatch, selection, currentPreferences, round]);
 
     const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
@@ -47,53 +74,65 @@ const RoundPage = () => {
         const card = cards.find(card => card.name === name);
 
         if (card?.token !== null) {
-            // Удаляем токен с карточки
             dispatch(removeToken(name));
         } else {
-            // Устанавливаем токен на карточку
             dispatch(placeToken(name));
         }
     };
 
     const handleNextClick = () => {
         const nextSelection = parseInt(selection) + 1;
+        const shuffledRounds = loadShuffledRoundsFromStorage();
 
-        // Если это первый минираунд (например, 1.1, 2.1 и т.д.), то переносим временное хранилище в постоянное
         if (selection === '1') {
-            // Переносим временные данные в постоянное хранилище
+            // Если это первый минираунд, переносим временное хранилище в постоянное
             moveTempToPermanentStorage();
-            // Очищаем временное хранилище
             saveToLocalStorage('tempCards', []);
         }
 
         // Сохраняем карточки текущего минираунда во временное хранилище
         cards.forEach(card => {
-            const fullCardData = currentPreferences[parseInt(selection) - 1].options.find(option => option.name === card.name);
+            const fullCardData = round === "1" || round === "2"
+                ? currentPreferences[parseInt(selection) - 1]?.options?.find(option => option.name === card.name)
+                : shuffledCards.find(shuffledCard => shuffledCard.name === card.name);
+
             const newCard = {
                 name: card.name,
-                imagePath: fullCardData ? fullCardData.imagePath : null,
-                main: round === "1", // Является ли это первым раундом (preferences)
-                category: currentPreferences[parseInt(selection) - 1].category,
-                tokenPlaced: card.token !== null, // Установлен ли токен
+                imagePath: fullCardData?.imagePath,
+                main: round === "1",
+                category: currentPreferences[parseInt(selection) - 1]?.category,
+                tokenPlaced: card.token !== null,
                 score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
             };
 
-            // Добавляем карточки во временное хранилище
             const existingTempCards = loadFromLocalStorage('tempCards') || [];
             saveToLocalStorage('tempCards', [...existingTempCards, newCard]);
         });
 
-        if (nextSelection <= totalCategories) {
-            // Переходим на следующий минираунд
-            router.push(`/round/${round}/${nextSelection}`);
-        } else if (round === "1") {
-            // Переход ко 2 раунду после 1
-            router.push(`/round/2/1`);
-        } else {
-            // Переход на этап спасения после 2 и 3 раундов
-            router.push(`/round/${round}/rescue`);
+        if (round === "1" ) {
+            // Логика для первого раунда: переход на следующий минираунд или ко второму раунду
+            if (nextSelection <= currentPreferences.length) {
+                router.push(`/round/${round}/${nextSelection}`);
+            } else {
+                router.push(`/round/2/1`); // Переход ко второму раунду после завершения первого
+            }
+        } else if (round === "2") {
+            // Логика для второго и третьего раунда: проверяем количество минираундов
+            if (nextSelection <= currentPreferences.length) {
+                router.push(`/round/${round}/${nextSelection}`);
+            } else {
+                router.push(`/round/${round}/rescue`); // Переход на этап спасения после раунда 2 или 3
+            }
+        }
+        else {
+            if (nextSelection <= shuffledRounds.length) {
+                router.push(`/round/${round}/${nextSelection}`);
+            } else {
+                router.push(`/round/${round}/rescue`); // Переход на этап спасения после раунда 2 или 3
+            }
         }
     };
+
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -106,11 +145,13 @@ const RoundPage = () => {
                 />
 
                 <CardList
-                    category={currentPreferences[parseInt(selection) - 1].category}
-                    cards={cards.map(card => ({
-                        ...card,
-                        imagePath: currentPreferences[parseInt(selection) - 1].options.find(option => option.name === card.name)?.imagePath || ''
-                    }))}
+                    category={currentPreferences[parseInt(selection) - 1]?.category || 'Random Cards'}
+                    cards={round === "1" || round === "2"
+                        ? cards.map(card => ({
+                            ...card,
+                            imagePath: currentPreferences[parseInt(selection) - 1]?.options?.find(option => option.name === card.name)?.imagePath || ''
+                        }))
+                        : shuffledCards}
                     onTokenPlace={handleTokenPlace}
                 />
 
