@@ -10,7 +10,7 @@ import Footer from '../../../../components/layout/Footer';
 import CardList from '../../../../components/game/CardList';
 import RoundHeader from '../../../../components/game/RoundHeader';
 import Button from '../../../../components/shared/Button';
-import {loadFromLocalStorage, loadShuffledRoundsFromStorage, saveToLocalStorage} from '../../../../utils/localStorage';
+import {loadFromLocalStorage, saveToLocalStorage} from '../../../../utils/localStorage';
 import { motion } from 'framer-motion';
 
 const RescuePage = () => {
@@ -23,13 +23,6 @@ const RescuePage = () => {
     const cards = useSelector((state: RootState) => state.token.cards);
 
     useEffect(() => {
-        const tmp = loadFromLocalStorage('tempCards');
-        const sh = loadShuffledRoundsFromStorage();
-        const pe = loadFromLocalStorage('permanentCards');
-        console.log('временное: ', {round, tmp});
-        console.log('шафл: ', {round, sh});
-        console.log('постоянное: ', {round, pe});
-        console.log('Карточки: ', {cards});
         // Загружаем карточки, которые не были выбраны в предыдущих раундах
         const tempCards = loadFromLocalStorage('tempCards')?.filter((card: any) => !card.tokenPlaced) || [];
         const filteredCards = tempCards.map((card: any) => ({

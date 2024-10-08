@@ -26,13 +26,6 @@ const RoundPage = () => {
     const currentPreferences = round === "1" ? cardsData.preferences : cardsData.leisureCategories;
 
     useEffect(() => {
-        const tmp = loadFromLocalStorage('tempCards');
-        const sh = loadShuffledRoundsFromStorage();
-        const pe = loadFromLocalStorage('permanentCards');
-        console.log('временное: ', {round, selection, tmp});
-        console.log('шафл: ', {round, selection, sh});
-        console.log('постоянное: ', {round, selection, pe});
-        console.log('Карточки: ', {cards});
 
         if (round === "1" || round === "2") {
             const selectedCategory = currentPreferences[parseInt(selection) - 1];
