@@ -1,13 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import playerReducer from './slices/playerSlice';
 import tokenReducer from './slices/tokenSlice';
-import roundReducer from './slices/roundSlice';
 
 export const store = configureStore({
     reducer: {
-        player: playerReducer,
         token: tokenReducer,
-        round: roundReducer,
     },
 });
 

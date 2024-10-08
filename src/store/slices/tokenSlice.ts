@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CardState {
     name: string;
+    imagePath: string;
+    category: string;
     token: 1 | 2 | null;
 }
 
@@ -25,9 +27,15 @@ const tokenSlice = createSlice({
     name: 'token',
     initialState,
     reducers: {
-        initializeCards: (state, action: PayloadAction<string[]>) => {
-            state.cards = action.payload.map(name => ({
-                name,
+        initializeCards: (state, action: PayloadAction<{ name: string; imagePath: string; category: string }[]>) => {
+            state.cards = action.payload.map(card => ({
+                ...card,
+                token: null,
+            }));
+        },
+        initializeRescueCards: (state, action: PayloadAction<{ name: string; imagePath: string; category: string }[]>) => {
+            state.cards = action.payload.map(card => ({
+                ...card,
                 token: null,
             }));
         },
@@ -55,10 +63,9 @@ const tokenSlice = createSlice({
                 state.availableTokens.second += 1;
             }
 
-            card.token = null; // Снимаем токен с карточки
+            card.token = null;
         },
         resetTokens: (state, action: PayloadAction<{ first: number; second: number }>) => {
-            // Сбрасываем токены для всех карточек и обновляем доступные токены
             state.cards.forEach(card => (card.token = null));
             state.availableTokens.first = action.payload.first;
             state.availableTokens.second = action.payload.second;
@@ -76,7 +83,6 @@ const tokenSlice = createSlice({
                     state.availableTokens.second = 0;
                 }
             } else {
-                // Для обычных раундов: всегда 1 токен первого типа и 1 второго
                 state.availableTokens.first = 1;
                 state.availableTokens.second = 1;
             }
@@ -84,5 +90,5 @@ const tokenSlice = createSlice({
     },
 });
 
-export const { initializeCards, placeToken, removeToken, resetTokens, setTokensByRoundType } = tokenSlice.actions;
+export const { initializeCards, initializeRescueCards, placeToken, removeToken, resetTokens, setTokensByRoundType } = tokenSlice.actions;
 export default tokenSlice.reducer;
