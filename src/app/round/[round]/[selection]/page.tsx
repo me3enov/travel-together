@@ -5,8 +5,6 @@ import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   initializeCards,
-  placeToken,
-  removeToken,
   setTokensByRoundType,
 } from '../../../../store/slices/tokenSlice';
 import { RootState } from '../../../../store';
@@ -94,16 +92,6 @@ const RoundPage = () => {
   }, [dispatch, selection, currentPreferences, round]);
 
   const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
-
-  const handleTokenPlace = (name: string) => {
-    const card = cards.find((card) => card.name === name);
-
-    if (card?.token !== null) {
-      dispatch(removeToken(name));
-    } else {
-      dispatch(placeToken(name));
-    }
-  };
 
   const handleNextClick = () => {
     const nextSelection = parseInt(selection) + 1;
@@ -218,12 +206,7 @@ const RoundPage = () => {
         />
 
         <CardList
-          category={
-            currentPreferences[parseInt(selection) - 1]?.category ||
-            'Random Cards'
-          }
           cards={round === '1' || round === '2' ? cards : shuffledCards}
-          onTokenPlace={handleTokenPlace}
         />
 
         <motion.div

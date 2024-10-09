@@ -5,8 +5,6 @@ import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   initializeRescueCards,
-  placeToken,
-  removeToken,
   setTokensByRoundType,
 } from '../../../../store/slices/tokenSlice';
 import { RootState } from '../../../../store';
@@ -57,16 +55,6 @@ const RescuePage: FC = () => {
   }, [dispatch, round]);
 
   const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
-
-  const handleTokenPlace = (name: string) => {
-    const card = cards.find((card) => card.name === name);
-
-    if (card?.token !== null) {
-      dispatch(removeToken(name));
-    } else {
-      dispatch(placeToken(name));
-    }
-  };
 
   const handleNextClick = () => {
     const existingTempCards: Card[] =
@@ -139,11 +127,7 @@ const RescuePage: FC = () => {
           }
         />
 
-        <CardList
-          category="Rescue"
-          cards={cards}
-          onTokenPlace={handleTokenPlace}
-        />
+        <CardList cards={cards} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

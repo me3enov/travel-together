@@ -32,9 +32,7 @@ export interface CardProps {
 }
 
 export interface CardListProps {
-  category: string;
   cards: { name: string; imagePath?: string }[];
-  onTokenPlace: () => void;
 }
 
 export interface ButtonProps {
