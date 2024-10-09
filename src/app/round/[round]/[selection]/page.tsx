@@ -205,7 +205,7 @@ const RoundPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header showHomeButton={true} onReset={() => {}} />
+      <Header showHomeButton={true} />
 
       <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
         <RoundHeader
