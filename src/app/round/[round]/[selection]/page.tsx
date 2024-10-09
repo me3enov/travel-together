@@ -29,22 +29,30 @@ const RoundPage = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const router = useRouter();
-  const { round, selection } = params as { round: string; selection: string };
+
+  // Проверка на массив и приведение к строке
+  const roundParam = Array.isArray(params.round)
+    ? params.round[0]
+    : params.round;
+  const selectionParam = Array.isArray(params.selection)
+    ? params.selection[0]
+    : params.selection;
+
   const tokens = useSelector((state: RootState) => state.token.availableTokens);
   const cards: Card[] = useSelector((state: RootState) => state.token.cards);
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [shuffledCards, setShuffledCards] = useState<Card[]>([]);
 
   const currentPreferences =
-    round === '1' ? cardsData.preferences : cardsData.leisureCategories;
+    roundParam === '1' ? cardsData.preferences : cardsData.leisureCategories;
 
   useEffect(() => {
     const nameFromCookie = Cookies.get('playerName');
     if (nameFromCookie) {
       setPlayerName(nameFromCookie);
     }
-    if (round === '1' || round === '2') {
-      const selectedCategory = currentPreferences[parseInt(selection) - 1];
+    if (roundParam === '1' || roundParam === '2') {
+      const selectedCategory = currentPreferences[parseInt(selectionParam) - 1];
       const cardData = selectedCategory?.options.map((option: Option) => ({
         name: option.name,
         imagePath: option.imagePath,
@@ -58,7 +66,7 @@ const RoundPage = () => {
         ? (loadShuffledRoundsFromStorage() as ShuffledRound[])
         : [];
 
-      if (selection === '1') {
+      if (selectionParam === '1') {
         saveToLocalStorage('shuffledRounds', []);
         shuffledRounds = [];
       }
@@ -75,7 +83,7 @@ const RoundPage = () => {
         shuffledRounds = loadShuffledRoundsFromStorage() as ShuffledRound[];
       }
 
-      const currentRound = shuffledRounds[parseInt(selection) - 1];
+      const currentRound = shuffledRounds[parseInt(selectionParam) - 1];
       dispatch(
         initializeCards(
           currentRound.options.map((card: Card) => ({
@@ -88,28 +96,31 @@ const RoundPage = () => {
       setShuffledCards(currentRound.options);
     }
 
-    dispatch(setTokensByRoundType({ round: parseInt(round), isRescue: false }));
-  }, [dispatch, selection, currentPreferences, round]);
+    // Передача корректного типа аргумента
+    dispatch(
+      setTokensByRoundType({ round: parseInt(roundParam), isRescue: false }),
+    );
+  }, [dispatch, selectionParam, currentPreferences, roundParam]);
 
   const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
 
   const handleNextClick = () => {
-    const nextSelection = parseInt(selection) + 1;
+    const nextSelection = parseInt(selectionParam) + 1;
     const shuffledRounds: ShuffledRound[] = Array.isArray(
       loadShuffledRoundsFromStorage(),
     )
       ? (loadShuffledRoundsFromStorage() as ShuffledRound[])
       : [];
 
-    if (selection === '1') {
+    if (selectionParam === '1') {
       moveTempToPermanentStorage();
       saveToLocalStorage('tempCards', []);
     }
 
     cards.forEach((card) => {
       const fullCardData: Option | undefined =
-        round === '1' || round === '2'
-          ? currentPreferences[parseInt(selection) - 1]?.options?.find(
+        roundParam === '1' || roundParam === '2'
+          ? currentPreferences[parseInt(selectionParam) - 1]?.options?.find(
               (option: Option) => option.name === card.name,
             )
           : shuffledCards.find(
@@ -119,8 +130,9 @@ const RoundPage = () => {
       const newCard: Card = {
         name: card.name,
         imagePath: fullCardData?.imagePath || '',
-        main: round === '1',
-        category: currentPreferences[parseInt(selection) - 1]?.category || '',
+        main: roundParam === '1',
+        category:
+          currentPreferences[parseInt(selectionParam) - 1]?.category || '',
         tokenPlaced: card.token !== null,
         score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
       };
@@ -134,17 +146,17 @@ const RoundPage = () => {
       saveToLocalStorage('tempCards', [...existingTempCards, newCard]);
     });
 
-    if (round === '1') {
+    if (roundParam === '1') {
       if (nextSelection <= currentPreferences.length) {
-        Cookies.set('currentRound', round);
+        Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', nextSelection.toString());
         Cookies.set('isRescue', 'false');
         window.history.replaceState(
           null,
           '',
-          `/round/${round}/${nextSelection}`,
+          `/round/${roundParam}/${nextSelection}`,
         );
-        router.push(`/round/${round}/${nextSelection}`);
+        router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
         Cookies.set('currentRound', '2');
         Cookies.set('currentSelection', '1');
@@ -152,41 +164,41 @@ const RoundPage = () => {
         window.history.replaceState(null, '', `/round/2/1`);
         router.push(`/round/2/1`);
       }
-    } else if (round === '2') {
+    } else if (roundParam === '2') {
       if (nextSelection <= currentPreferences.length) {
-        Cookies.set('currentRound', round);
+        Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', nextSelection.toString());
         Cookies.set('isRescue', 'false');
         window.history.replaceState(
           null,
           '',
-          `/round/${round}/${nextSelection}`,
+          `/round/${roundParam}/${nextSelection}`,
         );
-        router.push(`/round/${round}/${nextSelection}`);
+        router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
-        Cookies.set('currentRound', round);
+        Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', 'rescue');
         Cookies.set('isRescue', 'true');
-        window.history.replaceState(null, '', `/round/${round}/rescue`);
-        router.push(`/round/${round}/rescue`);
+        window.history.replaceState(null, '', `/round/${roundParam}/rescue`);
+        router.push(`/round/${roundParam}/rescue`);
       }
     } else {
       if (nextSelection <= shuffledRounds.length) {
-        Cookies.set('currentRound', round);
+        Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', nextSelection.toString());
         Cookies.set('isRescue', 'false');
         window.history.replaceState(
           null,
           '',
-          `/round/${round}/${nextSelection}`,
+          `/round/${roundParam}/${nextSelection}`,
         );
-        router.push(`/round/${round}/${nextSelection}`);
+        router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
-        Cookies.set('currentRound', round);
+        Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', 'rescue');
         Cookies.set('isRescue', 'true');
-        window.history.replaceState(null, '', `/round/${round}/rescue`);
-        router.push(`/round/${round}/rescue`);
+        window.history.replaceState(null, '', `/round/${roundParam}/rescue`);
+        router.push(`/round/${roundParam}/rescue`);
       }
     }
   };
@@ -197,7 +209,7 @@ const RoundPage = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
         <RoundHeader
-          roundTitle={`Round ${round}.${selection}`}
+          roundTitle={`Round ${roundParam}.${selectionParam}`}
           subtitle={
             tokens.first + tokens.second === 0
               ? 'Great!'
@@ -206,7 +218,9 @@ const RoundPage = () => {
         />
 
         <CardList
-          cards={round === '1' || round === '2' ? cards : shuffledCards}
+          cards={
+            roundParam === '1' || roundParam === '2' ? cards : shuffledCards
+          }
         />
 
         <motion.div

@@ -15,13 +15,15 @@ const tokenSlice = createSlice({
   reducers: {
     initializeCards: (
       state,
-      action: PayloadAction<Omit<CardState, 'token'>[]>,
+      action: PayloadAction<Omit<CardState, 'token'>[]>, // один аргумент — массив карточек
     ) => {
+      // обновляем state карточками, добавляем поле token
       state.cards = action.payload.map((card) => ({
         ...card,
-        token: null,
+        token: null, // устанавливаем token по умолчанию
       }));
     },
+
     initializeRescueCards: (
       state,
       action: PayloadAction<Omit<CardState, 'token'>[]>,
