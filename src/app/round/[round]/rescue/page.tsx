@@ -40,8 +40,8 @@ const RescuePage: FC = () => {
     }
 
     const tempCards: Card[] =
-      loadFromLocalStorage('tempCards')?.filter(
-        (card: Card) => !card.tokenPlaced,
+      (loadFromLocalStorage('tempCards') as Card[])?.filter(
+        (card: Card) => card.tokenPlaced,
       ) || [];
     const filteredCards: Card[] = tempCards.map((card: Card) => ({
       name: card.name,

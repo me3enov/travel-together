@@ -1,16 +1,18 @@
+import { Card } from '@/types';
+
 export const saveToLocalStorage = (key: string, value: unknown): void => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(key, JSON.stringify(value));
   }
 };
 
-export const loadFromLocalStorage = (key: string): unknown | null => {
+export function loadFromLocalStorage(key: string): Card[] | null {
   if (typeof window !== 'undefined') {
-    const savedData = localStorage.getItem(key);
-    return savedData ? JSON.parse(savedData) : null;
+    const data = localStorage.getItem(key);
+    return data ? (JSON.parse(data) as Card[]) : null;
   }
   return null;
-};
+}
 
 export const moveTempToPermanentStorage = (): void => {
   const tempStorage =

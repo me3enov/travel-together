@@ -67,9 +67,10 @@ const RoundPage = () => {
 
       if (!shuffledRounds || shuffledRounds.length === 0) {
         const tempCards: Card[] =
-          loadFromLocalStorage('tempCards')?.filter(
+          (loadFromLocalStorage('tempCards') as Card[])?.filter(
             (card: Card) => card.tokenPlaced,
           ) || [];
+
         const shuffled = [...tempCards].sort(() => 0.5 - Math.random());
 
         saveShuffledCardsToStorage(shuffled);
