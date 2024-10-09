@@ -9,20 +9,22 @@ interface LoginFormValues {
   name: string;
 }
 
-const LoginPopup: FC = ({ onSubmit }) => {
+interface LoginPopupProps {
+  onSubmit: () => void;
+}
+
+const LoginPopup: FC<LoginPopupProps> = ({ onSubmit }) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    watch,
   } = useForm<LoginFormValues>({
     mode: 'onChange',
   });
 
-  const onSubmitForm = () => {
-    const playerName = watch('name');
-    Cookies.set('playerName', playerName, { expires: 7 });
-    onSubmit?.({ name: playerName });
+  const onSubmitForm = (data: LoginFormValues) => {
+    Cookies.set('playerName', data.name, { expires: 7 });
+    onSubmit();
   };
 
   return (

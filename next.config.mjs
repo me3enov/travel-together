@@ -3,7 +3,12 @@ const nextConfig = {
     reactStrictMode: true,
     output: 'standalone',
     images: {
-        domains: ['i.giphy.com'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'i.giphy.com',
+            },
+        ],
     },
 };
 
