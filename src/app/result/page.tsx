@@ -38,12 +38,12 @@ const ResultPage: FC = () => {
   }, []);
 
   const mainPreferences = permanentCards
-      .filter((card) => card.main && card.tokenPlaced)
-      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    .filter((card) => card.main && card.tokenPlaced)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   const leisurePreferences = permanentCards
-      .filter((card) => !card.main && card.tokenPlaced)
-      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    .filter((card) => !card.main && card.tokenPlaced)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   const handleReset = () => {
     Cookies.remove('gameState');
