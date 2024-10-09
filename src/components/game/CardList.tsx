@@ -22,8 +22,13 @@ const CardList: FC<CardListProps> = ({ cards }) => {
       animate="visible"
     >
       <div className="flex flex-wrap justify-center gap-10">
-        {cards.map((card) => (
-          <Card key={card.name} name={card.name} imagePath={card.imagePath} />
+        {cards.map((card, index) => (
+          <Card
+            key={card.name}
+            name={card.name}
+            imagePath={card.imagePath}
+            index={index}
+          />
         ))}
       </div>
     </motion.div>
