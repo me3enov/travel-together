@@ -1,35 +1,39 @@
-import { google } from 'googleapis';
-import { sheets_v4 } from 'googleapis/build/src/apis/sheets';
-import { promises as fs } from 'fs';
-import path from 'path';
+import axios from 'axios';
 
-// Загрузка учетных данных сервисного аккаунта
-const getAuth = async () => {
-    const keyFilePath = path.join(process.cwd(), 'credentials.json');
-    const keyFileContent = await fs.readFile(keyFilePath, 'utf8');
-    const credentials = JSON.parse(keyFileContent);
+const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
+const GOOGLE_SHEETS_API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values:append`;
 
-    const auth = new google.auth.GoogleAuth({
-        credentials: {
-            client_email: credentials.client_email,
-            private_key: credentials.private_key,
-        },
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
+interface SheetData {
+    playerName: string;
+    preferences: string[];
+    timestamp: string;
+}
 
-    return auth;
-};
+export const saveToGoogleSheets = async (data: SheetData) => {
+    const sheetRange = 'Sheet1!A:D'; // Область данных в таблице
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY;
 
-export const appendDataToSheet = async (spreadsheetId: string, range: string, values: any[]) => {
-    const auth = await getAuth();
-    const sheets = google.sheets({ version: 'v4', auth }) as sheets_v4.Sheets;
+    const rowData = [
+        data.playerName,
+        data.preferences.join(', '),
+        new Date(data.timestamp).toISOString(),
+    ];
 
-    await sheets.spreadsheets.values.append({
-        spreadsheetId,
-        range,
-        valueInputOption: 'RAW',
-        requestBody: {
-            values,
-        },
-    });
+    try {
+        await axios.post(
+            `${GOOGLE_SHEETS_API_URL}?key=${apiKey}`,
+            {
+                range: sheetRange,
+                majorDimension: 'ROWS',
+                values: [rowData],
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+    } catch (error) {
+        console.error('Error saving to Google Sheets:', error);
+    }
 };

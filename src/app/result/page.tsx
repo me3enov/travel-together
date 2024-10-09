@@ -1,11 +1,12 @@
 // ResultPage.tsx
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import {saveToGoogleSheets} from "@/utils/googleSheets";
 
 const ResultPage = () => {
     const router = useRouter();
@@ -18,6 +19,19 @@ const ResultPage = () => {
         const name = Cookies.get('playerName');
         setPermanentCards(storedCards);
         setPlayerName(name);
+
+        if (name && storedCards.length > 0) {
+            const preferences = storedCards
+                .filter(card => card.tokenPlaced)
+                .map(card => card.name);
+
+            // Сохраняем данные в Google Sheets
+            saveToGoogleSheets({
+                playerName: name,
+                preferences,
+                timestamp: new Date().toISOString(),
+            });
+        }
     }, []);
 
     const mainPreferences = permanentCards
@@ -39,9 +53,13 @@ const ResultPage = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
+        <div className="flex flex-col min-h-screen bg-white">
             <Header showHomeButton={false} />
             <div className="flex-grow flex flex-col items-center justify-center py-16 px-4">
+                <img
+                    src={'https://i.giphy.com/XcH2j14aWyAknYAE1U.webp'}
+                />
+                <p><a href="https://giphy.com/gifs/luggage-racoon-trash-panda-XcH2j14aWyAknYAE1U">via GIPHY</a></p>
                 <h1 className="text-4xl font-bold mb-4 text-gray-800">{`${playerName}, congratulations on completing the Travel Together game!`}</h1>
                 <p className="text-xl text-gray-600 mb-8 text-center">You have explored your preferences and discovered what kind of trip would suit you best. Check out your top choices below.</p>
 
