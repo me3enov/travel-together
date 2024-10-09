@@ -207,7 +207,6 @@ const RoundPage = () => {
     <div className="flex flex-col min-h-screen">
       <Header
         showHomeButton={true}
-        remainingChips={tokens}
         onReset={() => {}}
       />
 
