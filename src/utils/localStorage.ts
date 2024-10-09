@@ -16,9 +16,9 @@ export function loadFromLocalStorage(key: string): Card[] | null {
 
 export const moveTempToPermanentStorage = (): void => {
   const tempStorage =
-    (loadFromLocalStorage('tempCards') as Record<string, unknown>[]) || [];
+    (loadFromLocalStorage('tempCards') as unknown as Card[]) || [];
   const permanentStorage =
-    (loadFromLocalStorage('permanentCards') as Record<string, unknown>[]) || [];
+    (loadFromLocalStorage('permanentCards') as unknown as Card[]) || [];
 
   tempStorage.forEach((tempCard) => {
     const existingCard = permanentStorage.find(
@@ -26,8 +26,7 @@ export const moveTempToPermanentStorage = (): void => {
     );
 
     if (existingCard) {
-      existingCard.score =
-        (existingCard.score as number) + (tempCard.score as number);
+      existingCard.score = (existingCard.score || 0) + (tempCard.score || 0);
     } else {
       const { ...newCard } = tempCard;
       permanentStorage.push(newCard);
