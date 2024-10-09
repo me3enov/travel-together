@@ -30,7 +30,6 @@ const RoundPage = () => {
   const params = useParams();
   const router = useRouter();
 
-  // Проверка на массив и приведение к строке
   const roundParam = Array.isArray(params.round)
     ? params.round[0]
     : params.round;
@@ -96,7 +95,6 @@ const RoundPage = () => {
       setShuffledCards(currentRound.options);
     }
 
-    // Передача корректного типа аргумента
     dispatch(
       setTokensByRoundType({ round: parseInt(roundParam), isRescue: false }),
     );

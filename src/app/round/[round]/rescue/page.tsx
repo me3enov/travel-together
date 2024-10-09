@@ -19,13 +19,15 @@ import {
   saveToLocalStorage,
 } from '../../../../utils/localStorage';
 import { motion } from 'framer-motion';
-import { Card } from '@/types'; // Импортируем интерфейс
+import { Card } from '@/types';
 
 const RescuePage: FC = () => {
   const router = useRouter();
   const params = useParams();
   const dispatch = useDispatch();
-  const { round } = params;
+  const roundParam = Array.isArray(params.round)
+    ? params.round[0]
+    : params.round;
 
   const tokens = useSelector((state: RootState) => state.token.availableTokens);
   const cards: Card[] = useSelector((state: RootState) => state.token.cards);
@@ -51,8 +53,10 @@ const RescuePage: FC = () => {
       dispatch(initializeRescueCards(filteredCards));
     }
 
-    dispatch(setTokensByRoundType({ round: parseInt(round), isRescue: true }));
-  }, [dispatch, round]);
+    dispatch(
+      setTokensByRoundType({ round: parseInt(roundParam), isRescue: true }),
+    );
+  }, [dispatch, roundParam]);
 
   const allTokensPlaced = tokens.first === 0 && tokens.second === 0;
 
@@ -89,7 +93,7 @@ const RescuePage: FC = () => {
 
     saveToLocalStorage('tempCards', mergedCards);
 
-    if (parseInt(round) === 4) {
+    if (parseInt(roundParam) === 4) {
       Cookies.set('gameState', 'completed');
       const finalCards: Card[] =
         (loadFromLocalStorage('tempCards') as Card[]) || [];
@@ -100,7 +104,7 @@ const RescuePage: FC = () => {
 
       window.history.replaceState(null, '', `/result`);
     } else {
-      const nextRound = parseInt(round) + 1;
+      const nextRound = parseInt(roundParam) + 1;
       Cookies.set('currentRound', nextRound.toString());
       Cookies.set('currentSelection', '1');
       Cookies.set('isRescue', 'false');
@@ -119,7 +123,7 @@ const RescuePage: FC = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
         <RoundHeader
-          roundTitle={`Round ${round} - Last chance to save them`}
+          roundTitle={`Round ${roundParam} - Last chance to save them`}
           subtitle={
             tokens.first + tokens.second === 0
               ? 'Great!'
