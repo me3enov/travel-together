@@ -38,9 +38,7 @@ export const moveTempToPermanentStorage = (): void => {
   saveToLocalStorage('tempCards', []);
 };
 
-export const saveShuffledCardsToStorage = (
-  shuffledCards: Record<string, unknown>[],
-): void => {
+export const saveShuffledCardsToStorage = (shuffledCards: Card[]): void => {
   const rounds = [];
 
   for (let i = 0; i < shuffledCards.length; i += 4) {
