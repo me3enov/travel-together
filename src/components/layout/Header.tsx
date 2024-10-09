@@ -1,23 +1,23 @@
+// components/layout/Header.tsx
 "use client";
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import HomeButton from '../shared/HomeButton';
 import Token from '../shared/Token';
 import { RootState } from '../../store';
+import { openResetPopup } from '../../store/slices/popupSlice'; // Импортируем экшен для открытия ResetPopup
 
 const Header = ({ showHomeButton }: { showHomeButton: boolean }) => {
     const tokens = useSelector((state: RootState) => state.token.availableTokens);
-    // Функция для полной очистки LocalStorage
-    const handleClearStorage = () => {
-        if (typeof window !== 'undefined') {
-            localStorage.clear();
-            console.log('LocalStorage has been cleared.');
-        }
+    const dispatch = useDispatch();
+
+    const handleOpenResetPopup = () => {
+        dispatch(openResetPopup()); // Открыть окно ResetPopup
     };
 
     return (
         <header className="w-full h-16 flex justify-between items-center p-4 bg-transparent fixed top-0 left-0 z-50"> {/* Высота 16 = 4rem */}
-            {showHomeButton && <HomeButton onClick={() => handleClearStorage()} />}
+            {showHomeButton && <HomeButton onClick={handleOpenResetPopup} />}
             {showHomeButton && (
                 <div className="flex space-x-8">
                     <Token value={1} count={tokens.first} />

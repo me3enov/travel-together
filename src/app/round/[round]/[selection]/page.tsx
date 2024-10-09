@@ -11,6 +11,7 @@ import CardList from '../../../../components/game/CardList';
 import RoundHeader from '../../../../components/game/RoundHeader';
 import Button from '../../../../components/shared/Button';
 import cardsData from '../../../../../public/data/cards.json';
+import Cookies from 'js-cookie';
 import { loadFromLocalStorage, saveToLocalStorage, moveTempToPermanentStorage, saveShuffledCardsToStorage, loadShuffledRoundsFromStorage } from '../../../../utils/localStorage';
 import { motion } from 'framer-motion';
 
@@ -21,12 +22,16 @@ const RoundPage = () => {
     const { round, selection } = params;
     const tokens = useSelector((state: RootState) => state.token.availableTokens);
     const cards = useSelector((state: RootState) => state.token.cards);
+    const [playerName, setPlayerName] = useState<string | null>(null);
     const [shuffledCards, setShuffledCards] = useState<any[]>([]);
 
     const currentPreferences = round === "1" ? cardsData.preferences : cardsData.leisureCategories;
 
     useEffect(() => {
-
+        const nameFromCookie = Cookies.get('playerName');
+        if (nameFromCookie) {
+            setPlayerName(nameFromCookie);
+        }
         if (round === "1" || round === "2") {
             const selectedCategory = currentPreferences[parseInt(selection) - 1];
             const cardData = selectedCategory?.options.map(option => ({
@@ -103,21 +108,45 @@ const RoundPage = () => {
 
         if (round === "1" ) {
             if (nextSelection <= currentPreferences.length) {
+                Cookies.set('currentRound', round);
+                Cookies.set('currentSelection', nextSelection.toString());
+                Cookies.set('isRescue', 'false');
+                window.history.replaceState(null, '', `/round/${round}/${nextSelection}`);  // Перезаписываем текущую историю
                 router.push(`/round/${round}/${nextSelection}`);
             } else {
+                Cookies.set('currentRound', '2');
+                Cookies.set('currentSelection', '1');
+                Cookies.set('isRescue', 'false');
+                window.history.replaceState(null, '', `/round/2/1`);  // Перезаписываем текущую историю
                 router.push(`/round/2/1`);
             }
         } else if (round === "2") {
             if (nextSelection <= currentPreferences.length) {
+                Cookies.set('currentRound', round);
+                Cookies.set('currentSelection', nextSelection.toString());
+                Cookies.set('isRescue', 'false');
+                window.history.replaceState(null, '', `/round/${round}/${nextSelection}`);  // Перезаписываем текущую историю
                 router.push(`/round/${round}/${nextSelection}`);
             } else {
+                Cookies.set('currentRound', round);
+                Cookies.set('currentSelection', 'rescue');
+                Cookies.set('isRescue', 'true');
+                window.history.replaceState(null, '', `/round/${round}/rescue`);  // Перезаписываем текущую историю
                 router.push(`/round/${round}/rescue`);
             }
         }
         else {
             if (nextSelection <= shuffledRounds.length) {
+                Cookies.set('currentRound', round);
+                Cookies.set('currentSelection', nextSelection.toString());
+                Cookies.set('isRescue', 'false');
+                window.history.replaceState(null, '', `/round/${round}/${nextSelection}`);  // Перезаписываем текущую историю
                 router.push(`/round/${round}/${nextSelection}`);
             } else {
+                Cookies.set('currentRound', round);
+                Cookies.set('currentSelection', 'rescue');
+                Cookies.set('isRescue', 'true');
+                window.history.replaceState(null, '', `/round/${round}/rescue`);  // Перезаписываем текущую историю
                 router.push(`/round/${round}/rescue`);
             }
         }
@@ -130,7 +159,7 @@ const RoundPage = () => {
             <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
                 <RoundHeader
                     roundTitle={`Round ${round}.${selection}`}
-                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `Please select the ${tokens.first + tokens.second} most preferred options`}
+                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `${playerName}, please select the ${tokens.first + tokens.second} most preferred options`}
                 />
 
                 <CardList
@@ -142,10 +171,11 @@ const RoundPage = () => {
                 />
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={allTokensPlaced ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.5 }} className="w-full px-8">
-                    <div className={`w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto ${!allTokensPlaced ? 'invisible' : ''}`}>
-                        <Button label="Next" onClick={handleNextClick} />
+                    <div className={`w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto`}>
+                        <Button label="Next" onClick={handleNextClick} disabled={!allTokensPlaced} /> {/* Передаем состояние disabled */}
                     </div>
                 </motion.div>
+
             </div>
 
             <Footer />

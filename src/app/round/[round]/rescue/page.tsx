@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeRescueCards, placeToken, removeToken, setTokensByRoundType } from '../../../../store/slices/tokenSlice';
 import { RootState } from '../../../../store';
+import Cookies from 'js-cookie';
 import Header from '../../../../components/layout/Header';
 import Footer from '../../../../components/layout/Footer';
 import CardList from '../../../../components/game/CardList';
@@ -21,8 +22,13 @@ const RescuePage = () => {
 
     const tokens = useSelector((state: RootState) => state.token.availableTokens);
     const cards = useSelector((state: RootState) => state.token.cards);
+    const [playerName, setPlayerName] = useState<string | null>(null);
 
     useEffect(() => {
+        const nameFromCookie = Cookies.get('playerName');
+        if (nameFromCookie) {
+            setPlayerName(nameFromCookie);
+        }
         // Загружаем карточки, которые не были выбраны в предыдущих раундах
         const tempCards = loadFromLocalStorage('tempCards')?.filter((card: any) => !card.tokenPlaced) || [];
         const filteredCards = tempCards.map((card: any) => ({
@@ -85,19 +91,22 @@ const RescuePage = () => {
 
         // Проверяем, является ли это последний раунд (4-й раунд)
         if (parseInt(round) === 4) {
+            Cookies.set('gameState', 'completed');
             // Переносим все карточки из временного хранилища в постоянное
             const finalCards = loadFromLocalStorage('tempCards') || [];
             const permanentCards = loadFromLocalStorage('permanentCards') || [];
             saveToLocalStorage('permanentCards', [...permanentCards, ...finalCards]);
 
-            // Очищаем временное хранилище
-            saveToLocalStorage('tempCards', []);
-
             // Переход на страницу результатов
+            window.history.replaceState(null, '', `/result`);  // Перезаписываем текущую историю
             router.push('/result');
         } else {
-            // Переход на следующий раунд, если это не последний раунд
             const nextRound = parseInt(round) + 1;
+            // Переход к следующему раунду
+            Cookies.set('currentRound', nextRound.toString());
+            Cookies.set('currentSelection', '1');
+            Cookies.set('isRescue', 'false');
+            window.history.replaceState(null, '', `/round/${nextRound}/1`);  // Перезаписываем текущую историю
             router.push(`/round/${nextRound}/1`);
         }
     };
@@ -109,7 +118,7 @@ const RescuePage = () => {
             <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
                 <RoundHeader
                     roundTitle={`Round ${round} - Last chance to save them`}
-                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `Please select the ${tokens.first + tokens.second} most preferred options`}
+                    subtitle={tokens.first + tokens.second === 0 ? 'Great!' : `${playerName}, please select the ${tokens.first + tokens.second} most preferred options`}
                 />
 
                 <CardList category="Rescue" cards={cards} onTokenPlace={handleTokenPlace} />
@@ -121,7 +130,7 @@ const RescuePage = () => {
                     className="w-full px-8"
                 >
                     <div className={`w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto ${!allTokensPlaced ? 'invisible' : ''}`}>
-                        <Button label="Next" onClick={handleNextClick} />
+                        <Button label="Next" onClick={handleNextClick} disabled={!allTokensPlaced} /> {/* Передаем состояние disabled */}
                     </div>
                 </motion.div>
             </div>

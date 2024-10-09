@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProviderWrapper from '../components/ProviderWrapper';
 import "./globals.css";
+import PopupManager from "@/components/shared/PopupManager";
 
 export const metadata: Metadata = {
     title: "Travel Together",
@@ -23,6 +24,7 @@ export default function RootLayout({
         <body className="antialiased bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] font-poppins">
         <ProviderWrapper>
             {children}
+            <PopupManager />
         </ProviderWrapper>
         </body>
         </html>

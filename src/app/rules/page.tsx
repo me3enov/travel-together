@@ -1,7 +1,7 @@
-"use client";  // Убедись, что директива установлена
+"use client";
 
 import { useRouter } from 'next/navigation';  // Импортируем роутер для клиента
-import RulesPopup from '../../components/rules/RulesPopup';
+import RulesPopup from '../../components/popups/rules/RulesPopup';
 
 const RulesPage = () => {
     const router = useRouter();  // Здесь безопасно использовать роутер

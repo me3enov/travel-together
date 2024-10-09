@@ -1,19 +1,35 @@
-import axios from 'axios';
+import { google } from 'googleapis';
+import { sheets_v4 } from 'googleapis/build/src/apis/sheets';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-const SHEET_ID = 'ваш_идентификатор_таблицы';
-const API_KEY = 'ваш_ключ_API';
+// Загрузка учетных данных сервисного аккаунта
+const getAuth = async () => {
+    const keyFilePath = path.join(process.cwd(), 'credentials.json');
+    const keyFileContent = await fs.readFile(keyFilePath, 'utf8');
+    const credentials = JSON.parse(keyFileContent);
 
-export const submitToGoogleSheets = async (playerName: string, scores: Record<string, number>) => {
-    const sheetURL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
+    const auth = new google.auth.GoogleAuth({
+        credentials: {
+            client_email: credentials.client_email,
+            private_key: credentials.private_key,
+        },
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
 
-    const date = new Date().toLocaleDateString();
-    const scoreData = Object.entries(scores).map(([option, score]) => [playerName, date, option, score]);
+    return auth;
+};
 
-    try {
-        await axios.post(sheetURL, {
-            values: scoreData,
-        });
-    } catch (error) {
-        console.error('Error submitting to Google Sheets', error);
-    }
+export const appendDataToSheet = async (spreadsheetId: string, range: string, values: any[]) => {
+    const auth = await getAuth();
+    const sheets = google.sheets({ version: 'v4', auth }) as sheets_v4.Sheets;
+
+    await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range,
+        valueInputOption: 'RAW',
+        requestBody: {
+            values,
+        },
+    });
 };

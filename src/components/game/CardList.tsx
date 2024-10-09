@@ -20,12 +20,12 @@ const containerVariants = {
 const CardList: React.FC<CardListProps> = ({ cards }) => {
     return (
         <motion.div
-            className="w-full flex flex-col items-center space-y-8"
+            className="w-full flex flex-col items-center space-y-12"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
         >
-            <div className="flex flex-wrap justify-center space-x-4">
+            <div className="flex flex-wrap justify-center gap-10">
                 {cards.map((card) => (
                     <Card
                         key={card.name}
@@ -35,6 +35,7 @@ const CardList: React.FC<CardListProps> = ({ cards }) => {
                 ))}
             </div>
         </motion.div>
+
     );
 };
 
