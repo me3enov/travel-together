@@ -23,10 +23,6 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
     }
   };
 
-  const imageSrcSet = imagePath
-    ? `${imagePath}.png 1x, ${imagePath}@2x.png 2x, ${imagePath}@3x.png 3x`
-    : null;
-
   const tokenIcon =
     card?.token === 1
       ? '/icons/token1.svg'
@@ -65,11 +61,10 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
         >
           {imagePath ? (
             <Image
-              src={`${imagePath}.png`}
-              srcSet={imageSrcSet}
+              src={`${imagePath}@2x.png`}
               alt={name}
-              width={50}
-              height={50}
+              width={212}
+              height={324}
               className="w-full h-full object-cover rounded-[15px]"
             />
           ) : (

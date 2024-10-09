@@ -49,13 +49,8 @@ export interface ModalProps {
 }
 
 export interface TokenProps {
-  value: number;
-  count: number;
-}
-
-export interface RoundPreferences {
-  category: string;
-  options: Card[];
+  first: number;
+  second: number;
 }
 
 export interface GoogleSheetsData {
@@ -67,6 +62,15 @@ export interface GoogleSheetsData {
 export interface RoundHeaderProps {
   roundTitle: string;
   subtitle: string;
+}
+
+export interface Option {
+  name: string;
+  imagePath: string;
+}
+
+export interface ShuffledRound {
+  options: Card[];
 }
 
 export interface OnStartHandler {

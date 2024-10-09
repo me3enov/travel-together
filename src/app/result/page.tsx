@@ -64,7 +64,6 @@ const ResultPage: FC = () => {
           alt="Giphy Image"
           width={50}
           height={50}
-          className="w-full h-auto"
         />
         <h1 className="text-4xl font-bold mb-4 text-gray-800">
           {`${playerName}, congratulations on completing the Travel Together game!`}

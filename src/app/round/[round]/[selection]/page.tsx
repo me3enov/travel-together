@@ -1,45 +1,43 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
+import {
+  initializeCards,
+  placeToken,
+  removeToken,
+  setTokensByRoundType,
+} from '../../../../store/slices/tokenSlice';
+import { RootState } from '../../../../store';
+import Header from '../../../../components/layout/Header';
+import Footer from '../../../../components/layout/Footer';
+import CardList from '../../../../components/game/CardList';
+import RoundHeader from '../../../../components/game/RoundHeader';
+import Button from '../../../../components/shared/Button';
+import cardsData from '../../../../../public/data/cards.json';
 import Cookies from 'js-cookie';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import CardList from '@/components/game/CardList';
-import RoundHeader from '@/components/game/RoundHeader';
-import Button from '@/components/shared/Button';
-import { RootState } from '@/store';
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
   moveTempToPermanentStorage,
   saveShuffledCardsToStorage,
   loadShuffledRoundsFromStorage,
-} from '@/utils/localStorage';
-import {
-  initializeCards,
-  placeToken,
-  removeToken,
-  setTokensByRoundType,
-} from '@/store/slices/tokenSlice';
-import cardsData from '../../../../../public/data/cards.json';
-import { Card, TokenProps, RoundPreferences } from '@/types';
+} from '../../../../utils/localStorage';
+import { motion } from 'framer-motion';
+import { Card, Option, ShuffledRound } from '@/types';
 
-const RoundPage: FC = () => {
+const RoundPage = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const router = useRouter();
-  const { round, selection } = params;
-  const tokens: TokenProps = useSelector(
-    (state: RootState) => state.token.availableTokens,
-  );
+  const { round, selection } = params as { round: string; selection: string };
+  const tokens = useSelector((state: RootState) => state.token.availableTokens);
   const cards: Card[] = useSelector((state: RootState) => state.token.cards);
   const [playerName, setPlayerName] = useState<string | null>(null);
   const [shuffledCards, setShuffledCards] = useState<Card[]>([]);
 
-  const currentPreferences: RoundPreferences =
+  const currentPreferences =
     round === '1' ? cardsData.preferences : cardsData.leisureCategories;
 
   useEffect(() => {
@@ -47,27 +45,25 @@ const RoundPage: FC = () => {
     if (nameFromCookie) {
       setPlayerName(nameFromCookie);
     }
-
     if (round === '1' || round === '2') {
       const selectedCategory = currentPreferences[parseInt(selection) - 1];
-      const cardData = selectedCategory?.options.map((option) => ({
+      const cardData = selectedCategory?.options.map((option: Option) => ({
         name: option.name,
         imagePath: option.imagePath,
         category: selectedCategory.category,
-        token: null,
       }));
       dispatch(initializeCards(cardData || []));
     } else {
-      let shuffledRounds = loadShuffledRoundsFromStorage();
+      let shuffledRounds: ShuffledRound[] = loadShuffledRoundsFromStorage();
       if (selection === '1') {
         saveToLocalStorage('shuffledRounds', []);
         shuffledRounds = [];
       }
 
       if (!shuffledRounds || shuffledRounds.length === 0) {
-        const tempCards =
+        const tempCards: Card[] =
           loadFromLocalStorage('tempCards')?.filter(
-            (card: Card) => card.token !== null,
+            (card: Card) => card.tokenPlaced,
           ) || [];
         const shuffled = [...tempCards].sort(() => 0.5 - Math.random());
 
@@ -82,7 +78,6 @@ const RoundPage: FC = () => {
             name: card.name,
             imagePath: card.imagePath,
             category: 'Mixed',
-            token: null,
           })),
         ),
       );
@@ -96,6 +91,7 @@ const RoundPage: FC = () => {
 
   const handleTokenPlace = (name: string) => {
     const card = cards.find((card) => card.name === name);
+
     if (card?.token !== null) {
       dispatch(removeToken(name));
     } else {
@@ -105,7 +101,7 @@ const RoundPage: FC = () => {
 
   const handleNextClick = () => {
     const nextSelection = parseInt(selection) + 1;
-    const shuffledRounds = loadShuffledRoundsFromStorage();
+    const shuffledRounds: ShuffledRound[] = loadShuffledRoundsFromStorage();
 
     if (selection === '1') {
       moveTempToPermanentStorage();
@@ -113,25 +109,25 @@ const RoundPage: FC = () => {
     }
 
     cards.forEach((card) => {
-      const fullCardData =
+      const fullCardData: Option | undefined =
         round === '1' || round === '2'
           ? currentPreferences[parseInt(selection) - 1]?.options?.find(
-              (option) => option.name === card.name,
+              (option: Option) => option.name === card.name,
             )
           : shuffledCards.find(
               (shuffledCard) => shuffledCard.name === card.name,
             );
 
-      const newCard = {
+      const newCard: Card = {
         name: card.name,
         imagePath: fullCardData?.imagePath || '',
         main: round === '1',
-        category: currentPreferences[parseInt(selection) - 1]?.category,
+        category: currentPreferences[parseInt(selection) - 1]?.category || '',
         tokenPlaced: card.token !== null,
         score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
       };
 
-      const existingTempCards = loadFromLocalStorage('tempCards') || [];
+      const existingTempCards: Card[] = loadFromLocalStorage('tempCards') || [];
       saveToLocalStorage('tempCards', [...existingTempCards, newCard]);
     });
 
@@ -199,6 +195,7 @@ const RoundPage: FC = () => {
         remainingChips={tokens}
         onReset={() => {}}
       />
+
       <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
         <RoundHeader
           roundTitle={`Round ${round}.${selection}`}
@@ -208,6 +205,7 @@ const RoundPage: FC = () => {
               : `${playerName}, please select the ${tokens.first + tokens.second} most preferred options`
           }
         />
+
         <CardList
           category={
             currentPreferences[parseInt(selection) - 1]?.category ||
@@ -216,6 +214,7 @@ const RoundPage: FC = () => {
           cards={round === '1' || round === '2' ? cards : shuffledCards}
           onTokenPlace={handleTokenPlace}
         />
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={
@@ -235,6 +234,7 @@ const RoundPage: FC = () => {
           </div>
         </motion.div>
       </div>
+
       <Footer />
     </div>
   );

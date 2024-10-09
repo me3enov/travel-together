@@ -3,33 +3,34 @@
 import { FC, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { motion } from 'framer-motion';
-import Cookies from 'js-cookie';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import CardList from '@/components/game/CardList';
-import RoundHeader from '@/components/game/RoundHeader';
-import Button from '@/components/shared/Button';
-import { RootState } from '@/store';
 import {
   initializeRescueCards,
   placeToken,
   removeToken,
   setTokensByRoundType,
-} from '@/store/slices/tokenSlice';
-import { loadFromLocalStorage, saveToLocalStorage } from '@/utils/localStorage';
-import { Card, TokenProps } from '@/types';
+} from '../../../../store/slices/tokenSlice';
+import { RootState } from '../../../../store';
+import Cookies from 'js-cookie';
+import Header from '../../../../components/layout/Header';
+import Footer from '../../../../components/layout/Footer';
+import CardList from '../../../../components/game/CardList';
+import RoundHeader from '../../../../components/game/RoundHeader';
+import Button from '../../../../components/shared/Button';
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+} from '../../../../utils/localStorage';
+import { motion } from 'framer-motion';
+import { Card } from '@/types'; // Импортируем интерфейс
 
 const RescuePage: FC = () => {
   const router = useRouter();
   const params = useParams();
   const dispatch = useDispatch();
-  const { round } = params as { round: string };
+  const { round } = params;
 
-  const tokens: TokenProps = useSelector(
-    (state: RootState) => state.token.availableTokens,
-  );
-  const cards = useSelector((state: RootState) => state.token.cards);
+  const tokens = useSelector((state: RootState) => state.token.availableTokens);
+  const cards: Card[] = useSelector((state: RootState) => state.token.cards);
   const [playerName, setPlayerName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const RescuePage: FC = () => {
 
   const handleTokenPlace = (name: string) => {
     const card = cards.find((card) => card.name === name);
+
     if (card?.token !== null) {
       dispatch(removeToken(name));
     } else {
@@ -78,10 +80,11 @@ const RescuePage: FC = () => {
     }));
 
     const mergedCards = [...existingTempCards, ...updatedCards].reduce(
-      (acc, currentCard) => {
+      (acc: Card[], currentCard: Card) => {
         const existingCardIndex = acc.findIndex(
-          (c) => c.name === currentCard.name,
+          (c: Card) => c.name === currentCard.name,
         );
+
         if (existingCardIndex > -1) {
           if (currentCard.tokenPlaced || !acc[existingCardIndex].tokenPlaced) {
             acc[existingCardIndex] = currentCard;
@@ -89,6 +92,7 @@ const RescuePage: FC = () => {
         } else {
           acc.push(currentCard);
         }
+
         return acc;
       },
       [] as Card[],
@@ -102,8 +106,8 @@ const RescuePage: FC = () => {
       const permanentCards: Card[] =
         loadFromLocalStorage('permanentCards') || [];
       saveToLocalStorage('permanentCards', [...permanentCards, ...finalCards]);
+
       window.history.replaceState(null, '', `/result`);
-      router.push('/result');
     } else {
       const nextRound = parseInt(round) + 1;
       Cookies.set('currentRound', nextRound.toString());
