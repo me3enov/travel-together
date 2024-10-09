@@ -49,7 +49,7 @@ export interface ModalProps {
 }
 
 export interface TokenProps {
-  value: 1 | 2;
+  value: number;
   count: number;
 }
 
