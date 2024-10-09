@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 export interface Card {
   name: string;
   imagePath: string;
@@ -39,12 +37,6 @@ export interface ButtonProps {
   label: string;
   onClick: () => void;
   disabled?: boolean;
-}
-
-export interface ModalProps {
-  isOpen: boolean;
-  children: ReactNode;
-  onClose: () => void;
 }
 
 export interface GoogleSheetsData {

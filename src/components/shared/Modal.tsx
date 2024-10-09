@@ -2,7 +2,6 @@
 
 import { FC, ReactNode, useEffect } from 'react';
 import CloseButton from './CloseButton';
-import { ModalProps } from '@/types';
 
 interface ModalProps {
   isOpen: boolean;
