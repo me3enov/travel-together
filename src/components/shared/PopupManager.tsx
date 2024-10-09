@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
@@ -7,49 +7,47 @@ import LoginPopup from '../popups/login/LoginPopup';
 import RulesPopup from '../popups/rules/RulesPopup';
 import ResetPopup from '../popups/reset/ResetPopup';
 import {
-    closeAllPopups,
-    closeLoginPopup,
-    closeRulesPopup,
-    closeResetPopup,
-    openRulesPopup
+  closeAllPopups,
+  closeLoginPopup,
+  closeRulesPopup,
+  closeResetPopup,
+  openRulesPopup,
 } from '../../store/slices/popupSlice';
 
-const PopupManager = () => {
-    const dispatch = useDispatch();
-    const { isLoginOpen, isRulesOpen, isResetOpen } = useSelector((state: RootState) => state.popup);
+const PopupManager: React.FC = () => {
+  const dispatch = useDispatch();
+  const { isLoginOpen, isRulesOpen, isResetOpen } = useSelector(
+    (state: RootState) => state.popup,
+  );
 
-    const handleLoginSubmit = (data: { name: string }) => {
-        dispatch(closeLoginPopup());
-        dispatch(openRulesPopup()); // Открыть окно с правилами
-    };
+  const handleLoginSubmit = (): void => {
+    dispatch(closeLoginPopup());
+    dispatch(openRulesPopup());
+  };
 
-    const handleStartGame = () => {
-        dispatch(closeRulesPopup());
-        // Логика начала игры
-    };
+  const handleStartGame = (): void => {
+    dispatch(closeRulesPopup());
+  };
 
-    const handleCloseAll = () => {
-        dispatch(closeAllPopups()); // Закрыть все окна
-    };
+  const handleCloseAll = (): void => {
+    dispatch(closeAllPopups());
+  };
 
-    return (
-        <>
-            {/* Модальное окно для логина */}
-            <Modal isOpen={isLoginOpen} onClose={() => dispatch(closeLoginPopup())}>
-                <LoginPopup onSubmit={handleLoginSubmit} />
-            </Modal>
+  return (
+    <>
+      <Modal isOpen={isLoginOpen} onClose={() => dispatch(closeLoginPopup())}>
+        <LoginPopup onSubmit={handleLoginSubmit} />
+      </Modal>
 
-            {/* Модальное окно для правил */}
-            <Modal isOpen={isRulesOpen} onClose={() => dispatch(closeRulesPopup())}>
-                <RulesPopup onStart={handleStartGame} />
-            </Modal>
+      <Modal isOpen={isRulesOpen} onClose={() => dispatch(closeRulesPopup())}>
+        <RulesPopup onStart={handleStartGame} />
+      </Modal>
 
-            {/* Модальное окно для сброса */}
-            <Modal isOpen={isResetOpen} onClose={() => dispatch(closeResetPopup())}>
-                <ResetPopup onClose={handleCloseAll} />
-            </Modal>
-        </>
-    );
+      <Modal isOpen={isResetOpen} onClose={() => dispatch(closeResetPopup())}>
+        <ResetPopup onClose={handleCloseAll} />
+      </Modal>
+    </>
+  );
 };
 
 export default PopupManager;

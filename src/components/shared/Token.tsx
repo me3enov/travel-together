@@ -1,19 +1,16 @@
-import React from 'react';
+import { FC } from 'react';
+import Image from 'next/image';
+import { TokenProps } from '@/types';
 
-interface TokenProps {
-    value: 1 | 2;
-    count: number;
-}
+const Token: FC<TokenProps> = ({ value, count }) => {
+  const iconSrc = value === 1 ? '/icons/token1.svg' : '/icons/token2.svg';
 
-const Token: React.FC<TokenProps> = ({ value, count }) => {
-    const iconSrc = value === 1 ? '/icons/token1.svg' : '/icons/token2.svg';
-
-    return (
-        <div className="flex items-center space-x-2">
-            <img src={iconSrc} alt={`Token ${value}`} className="w-8 h-8" />
-            <span className="text-white text-lg font-bold">X {count}</span>
-        </div>
-    );
+  return (
+    <div className="flex items-center space-x-2">
+      <Image src={iconSrc} alt={`Token ${value}`} width={32} height={32} />
+      <span className="text-white text-lg font-bold">X {count}</span>
+    </div>
+  );
 };
 
 export default Token;

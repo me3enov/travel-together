@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
+import { FC } from 'react';
 import { useDispatch } from 'react-redux';
-import { openLoginPopup } from '../store/slices/popupSlice'; // Импортируем экшен для открытия LoginPopup
-import Preloader from '../components/preloader/Preloader';
+import Preloader from '@/components/preloader/Preloader';
+import { openLoginPopup } from '@/store/slices/popupSlice';
 
-export default function Home() {
-    const dispatch = useDispatch();
+const Home: FC = () => {
+  const dispatch = useDispatch();
 
-    const handleJoinClick = () => {
-        dispatch(openLoginPopup()); // Открыть окно LoginPopup при нажатии на Start
-    };
+  const handleJoinClick = () => {
+    dispatch(openLoginPopup());
+  };
 
-    return (
-        <Preloader onJoin={handleJoinClick} />
-    );
-}
+  return <Preloader onJoin={handleJoinClick} />;
+};
+
+export default Home;

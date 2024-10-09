@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
+import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 
-// Упрощенный ProviderWrapper, только для работы с Redux
-export default function ProviderWrapper({ children }: { children: React.ReactNode }) {
-    return (
-        <Provider store={store}>
-            {children}
-        </Provider>
-    );
+interface ProviderWrapperProps {
+  children: ReactNode;
+}
+
+export default function ProviderWrapper({ children }: ProviderWrapperProps) {
+  return <Provider store={store}>{children}</Provider>;
 }

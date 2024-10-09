@@ -1,21 +1,22 @@
-"use client";
+'use client';
 
-import { useRouter } from 'next/navigation';  // Импортируем роутер для клиента
-import RulesPopup from '../../components/popups/rules/RulesPopup';
+import { FC } from 'react';
+import { useRouter } from 'next/navigation';
+import RulesPopup from '@/components/popups/rules/RulesPopup';
+import { OnStartHandler } from '@/types';
 
-const RulesPage = () => {
-    const router = useRouter();  // Здесь безопасно использовать роутер
+const RulesPage: FC = () => {
+  const router = useRouter();
 
-    const handleStart = () => {
-        // Перенаправляем на первый мини-раунд (Round 1, Selection 1)
-        router.push('/round/1/1');
-    };
+  const handleStart: OnStartHandler['onStart'] = () => {
+    router.push('/round/1/1');
+  };
 
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#C2E59C] to-[#64B3F4]">
-            <RulesPopup onStart={handleStart} />
-        </div>
-    );
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#C2E59C] to-[#64B3F4]">
+      <RulesPopup onStart={handleStart} />
+    </div>
+  );
 };
 
 export default RulesPage;

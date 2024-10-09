@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import tokenReducer from './slices/tokenSlice';
-import popupReducer from './slices/popupSlice'; // Импортируем редьюсер для управления попапами
+import popupReducer from './slices/popupSlice';
 
 export const store = configureStore({
-    reducer: {
-        token: tokenReducer,
-        popup: popupReducer, // Добавляем редьюсер для попапов
-    },
+  reducer: {
+    token: tokenReducer,
+    popup: popupReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
