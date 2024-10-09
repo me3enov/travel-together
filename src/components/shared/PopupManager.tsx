@@ -1,5 +1,6 @@
 'use client';
 
+import { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import Modal from './Modal';
@@ -14,7 +15,7 @@ import {
   openRulesPopup,
 } from '../../store/slices/popupSlice';
 
-const PopupManager: React.FC = () => {
+const PopupManager: FC = () => {
   const dispatch = useDispatch();
   const { isLoginOpen, isRulesOpen, isResetOpen } = useSelector(
     (state: RootState) => state.popup,

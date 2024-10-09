@@ -54,7 +54,12 @@ const RoundPage = () => {
       }));
       dispatch(initializeCards(cardData || []));
     } else {
-      let shuffledRounds: ShuffledRound[] = loadShuffledRoundsFromStorage();
+      let shuffledRounds: ShuffledRound[] = Array.isArray(
+        loadShuffledRoundsFromStorage(),
+      )
+        ? (loadShuffledRoundsFromStorage() as ShuffledRound[])
+        : [];
+
       if (selection === '1') {
         saveToLocalStorage('shuffledRounds', []);
         shuffledRounds = [];
@@ -68,7 +73,7 @@ const RoundPage = () => {
         const shuffled = [...tempCards].sort(() => 0.5 - Math.random());
 
         saveShuffledCardsToStorage(shuffled);
-        shuffledRounds = loadShuffledRoundsFromStorage();
+        shuffledRounds = loadShuffledRoundsFromStorage() as ShuffledRound[];
       }
 
       const currentRound = shuffledRounds[parseInt(selection) - 1];
@@ -101,7 +106,11 @@ const RoundPage = () => {
 
   const handleNextClick = () => {
     const nextSelection = parseInt(selection) + 1;
-    const shuffledRounds: ShuffledRound[] = loadShuffledRoundsFromStorage();
+    const shuffledRounds: ShuffledRound[] = Array.isArray(
+      loadShuffledRoundsFromStorage(),
+    )
+      ? (loadShuffledRoundsFromStorage() as ShuffledRound[])
+      : [];
 
     if (selection === '1') {
       moveTempToPermanentStorage();
@@ -127,7 +136,12 @@ const RoundPage = () => {
         score: card.token === 1 ? 3 : card.token === 2 ? 2 : 0,
       };
 
-      const existingTempCards: Card[] = loadFromLocalStorage('tempCards') || [];
+      const existingTempCards: Card[] = Array.isArray(
+        loadFromLocalStorage('tempCards'),
+      )
+        ? (loadFromLocalStorage('tempCards') as Card[])
+        : [];
+
       saveToLocalStorage('tempCards', [...existingTempCards, newCard]);
     });
 

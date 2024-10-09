@@ -48,11 +48,6 @@ export interface ModalProps {
   onClose: () => void;
 }
 
-export interface TokenProps {
-  first: number;
-  second: number;
-}
-
 export interface GoogleSheetsData {
   playerName: string;
   preferences: string[];

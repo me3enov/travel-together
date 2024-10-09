@@ -1,6 +1,10 @@
 import { FC } from 'react';
 import Image from 'next/image';
-import { TokenProps } from '@/types';
+
+export interface TokenProps {
+  value: number;
+  count: number;
+}
 
 const Token: FC<TokenProps> = ({ value, count }) => {
   const iconSrc = value === 1 ? '/icons/token1.svg' : '/icons/token2.svg';

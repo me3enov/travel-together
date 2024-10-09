@@ -69,7 +69,8 @@ const RescuePage: FC = () => {
   };
 
   const handleNextClick = () => {
-    const existingTempCards: Card[] = loadFromLocalStorage('tempCards') || [];
+    const existingTempCards: Card[] =
+      (loadFromLocalStorage('tempCards') as Card[]) || [];
 
     const updatedCards: Card[] = cards.map((card) => ({
       name: card.name,
@@ -102,9 +103,11 @@ const RescuePage: FC = () => {
 
     if (parseInt(round) === 4) {
       Cookies.set('gameState', 'completed');
-      const finalCards: Card[] = loadFromLocalStorage('tempCards') || [];
-      const permanentCards: Card[] =
-        loadFromLocalStorage('permanentCards') || [];
+      const finalCards: Card[] =
+        (loadFromLocalStorage('tempCards') as Card[]) || [];
+      const permanentCards: Card[] = loadFromLocalStorage(
+        'permanentCards',
+      ) as Card[];
       saveToLocalStorage('permanentCards', [...permanentCards, ...finalCards]);
 
       window.history.replaceState(null, '', `/result`);
