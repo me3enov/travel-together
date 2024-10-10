@@ -152,14 +152,14 @@ const RoundPageClient = () => {
         window.history.replaceState(
           null,
           '',
-          `/round/${roundParam}/${nextSelection}`,
+          `/travel-together/round/${roundParam}/${nextSelection}`,
         );
         router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
         Cookies.set('currentRound', '2');
         Cookies.set('currentSelection', '1');
         Cookies.set('isRescue', 'false');
-        window.history.replaceState(null, '', `/round/2/1`);
+        window.history.replaceState(null, '', `/travel-together/round/2/1`);
         router.push(`/round/2/1`);
       }
     } else if (roundParam === '2') {
@@ -170,14 +170,18 @@ const RoundPageClient = () => {
         window.history.replaceState(
           null,
           '',
-          `/round/${roundParam}/${nextSelection}`,
+          `/travel-together/round/${roundParam}/${nextSelection}`,
         );
         router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
         Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', 'rescue');
         Cookies.set('isRescue', 'true');
-        window.history.replaceState(null, '', `/round/${roundParam}/rescue`);
+        window.history.replaceState(
+          null,
+          '',
+          `/travel-together/round/${roundParam}/rescue`,
+        );
         router.push(`/round/${roundParam}/rescue`);
       }
     } else {
@@ -188,14 +192,18 @@ const RoundPageClient = () => {
         window.history.replaceState(
           null,
           '',
-          `/round/${roundParam}/${nextSelection}`,
+          `/travel-together/round/${roundParam}/${nextSelection}`,
         );
         router.push(`/round/${roundParam}/${nextSelection}`);
       } else {
         Cookies.set('currentRound', roundParam);
         Cookies.set('currentSelection', 'rescue');
         Cookies.set('isRescue', 'true');
-        window.history.replaceState(null, '', `/round/${roundParam}/rescue`);
+        window.history.replaceState(
+          null,
+          '',
+          `/travel-together/round/${roundParam}/rescue`,
+        );
         router.push(`/round/${roundParam}/rescue`);
       }
     }
