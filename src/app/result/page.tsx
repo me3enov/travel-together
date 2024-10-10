@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { saveToGoogleSheets } from '@/utils/googleSheets';
-import { Card, GoogleSheetsData } from '@/types';
+import { Card } from '@/types';
 
 const ResultPage: FC = () => {
   const router = useRouter();
@@ -23,27 +23,32 @@ const ResultPage: FC = () => {
     setPlayerName(name);
 
     if (name && storedCards.length > 0) {
-      const preferences = storedCards
-        .filter((card) => card.tokenPlaced)
-        .map((card) => card.name);
+      // Сортируем предпочтения
+      const mainPreferences = storedCards
+        .filter((card) => card.main && card.tokenPlaced)
+        .map((card) => ({
+          name: card.name,
+          score: card.score ?? 0,
+        }));
 
-      const googleSheetsData: GoogleSheetsData = {
+      const leisurePreferences = storedCards
+        .filter((card) => !card.main && card.tokenPlaced)
+        .map((card) => ({
+          name: card.name,
+          score: card.score ?? 0,
+        }));
+
+      // Формируем данные для отправки в Google Sheets
+      const googleSheetsData = {
         playerName: name,
-        preferences,
-        timestamp: new Date().toISOString(),
+        mainPreferences,
+        leisurePreferences,
       };
 
+      // Отправляем данные в Google Sheets
       saveToGoogleSheets(googleSheetsData);
     }
   }, []);
-
-  const mainPreferences = permanentCards
-    .filter((card) => card.main && card.tokenPlaced)
-    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-
-  const leisurePreferences = permanentCards
-    .filter((card) => !card.main && card.tokenPlaced)
-    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   const handleReset = () => {
     Cookies.remove('gameState');
@@ -54,6 +59,14 @@ const ResultPage: FC = () => {
     localStorage.clear();
     router.push('/');
   };
+
+  const mainPreferences = permanentCards
+    .filter((card) => card.main && card.tokenPlaced)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+
+  const leisurePreferences = permanentCards
+    .filter((card) => !card.main && card.tokenPlaced)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   return (
     <div className="flex flex-col min-h-screen bg-white">

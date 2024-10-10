@@ -99,14 +99,18 @@ const RescuePageClient: FC = () => {
       ) as Card[];
       saveToLocalStorage('permanentCards', [...permanentCards, ...finalCards]);
 
-      window.history.replaceState(null, '', `/result`);
+      window.history.replaceState(null, '', `/travel-together/result`);
       router.push(`/result`);
     } else {
       const nextRound = parseInt(roundParam) + 1;
       Cookies.set('currentRound', nextRound.toString());
       Cookies.set('currentSelection', '1');
       Cookies.set('isRescue', 'false');
-      window.history.replaceState(null, '', `/round/${nextRound}/1`);
+      window.history.replaceState(
+        null,
+        '',
+        `/travel-together/round/${nextRound}/1`,
+      );
       router.push(`/round/${nextRound}/1`);
     }
   };
