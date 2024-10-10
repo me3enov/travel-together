@@ -1,12 +1,7 @@
-// src/app/round/[round]/[selection]/page.tsx
 import RoundPageClient from '@/components/game/RoundPageClient';
 
-const RoundPage = ({
-  params,
-}: {
-  params: { round: string; selection: string };
-}) => {
-  return <RoundPageClient round={params.round} selection={params.selection} />;
+const RoundPage = () => {
+  return <RoundPageClient />;
 };
 
 export async function generateStaticParams() {
