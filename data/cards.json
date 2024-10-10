@@ -1,0 +1,303 @@
+{
+  "preferences": [
+    {
+      "category": "Location",
+      "options": [
+        {
+          "name": "Megapolis",
+          "imagePath": "/images/cards/Megapolis/Megapolis"
+        },
+        {
+          "name": "City",
+          "imagePath": "/images/cards/City/City"
+        },
+        {
+          "name": "Town",
+          "imagePath": "/images/cards/Town/Town"
+        },
+        {
+          "name": "Privacy",
+          "imagePath": "/images/cards/Privacy/Privacy"
+        },
+        {
+          "name": "Resort",
+          "imagePath": "/images/cards/Resort/Resort"
+        }
+      ]
+    },
+    {
+      "category": "Accommodation",
+      "options": [
+        {
+          "name": "Hotel",
+          "imagePath": "/images/cards/Hotel/Hotel"
+        },
+        {
+          "name": "Apartments",
+          "imagePath": "/images/cards/Apartments/Apartments"
+        },
+        {
+          "name": "House",
+          "imagePath": "/images/cards/House/House"
+        },
+        {
+          "name": "Camping",
+          "imagePath": "/images/cards/Camping/Camping"
+        }
+      ]
+    },
+    {
+      "category": "Views",
+      "options": [
+        {
+          "name": "Mountains",
+          "imagePath": "/images/cards/Mountains/Mountains"
+        },
+        {
+          "name": "Sea",
+          "imagePath": "/images/cards/Sea/Sea"
+        },
+        {
+          "name": "Forest",
+          "imagePath": "/images/cards/Forest/Forest"
+        },
+        {
+          "name": "Promenade",
+          "imagePath": "/images/cards/Promenade/Promenade"
+        },
+        {
+          "name": "Dunes",
+          "imagePath": "/images/cards/Dunes/Dunes"
+        }
+      ]
+    },
+    {
+      "category": "Intensity",
+      "options": [
+        {
+          "name": "One Location",
+          "imagePath": "/images/cards/OneLocation/OneLocation"
+        },
+        {
+          "name": "Base with Excursions",
+          "imagePath": "/images/cards/BaseExcursions/BaseExcursions"
+        },
+        {
+          "name": "Travel",
+          "imagePath": "/images/cards/Travel/Travel"
+        }
+      ]
+    },
+    {
+      "category": "Sightseeing",
+      "options": [
+        {
+          "name": "On Foot",
+          "imagePath": "/images/cards/OnFoot/OnFoot"
+        },
+        {
+          "name": "Car",
+          "imagePath": "/images/cards/Car/Car"
+        },
+        {
+          "name": "Ship",
+          "imagePath": "/images/cards/Ship/Ship"
+        },
+        {
+          "name": "Excursion",
+          "imagePath": "/images/cards/Excursion/Excursion"
+        },
+        {
+          "name": "Boat/Kayak",
+          "imagePath": "/images/cards/BoatKayak/BoatKayak"
+        }
+      ]
+    },
+    {
+      "category": "Cuisine",
+      "options": [
+        {
+          "name": "National",
+          "imagePath": "/images/cards/National/National"
+        },
+        {
+          "name": "European",
+          "imagePath": "/images/cards/European/European"
+        },
+        {
+          "name": "Seafood",
+          "imagePath": "/images/cards/Seafood/Seafood"
+        },
+        {
+          "name": "Own",
+          "imagePath": "/images/cards/Own/Own"
+        }
+      ]
+    }
+  ],
+  "leisureCategories": [
+    {
+      "category": "Shopping",
+      "options": [
+        {
+          "name": "Markets",
+          "imagePath": "/images/cards/Markets/Markets"
+        },
+        {
+          "name": "Shopping Malls",
+          "imagePath": "/images/cards/ShoppingMalls/ShoppingMalls"
+        },
+        {
+          "name": "Outlets",
+          "imagePath": "/images/cards/Outlets/Outlets"
+        },
+        {
+          "name": "Shops",
+          "imagePath": "/images/cards/Shops/Shops"
+        }
+      ]
+    },
+    {
+      "category": "Active Entertainment",
+      "options": [
+        {
+          "name": "Off-road",
+          "imagePath": "/images/cards/OffRoad/OffRoad"
+        },
+        {
+          "name": "Horse Riding",
+          "imagePath": "/images/cards/HorseRiding/HorseRiding"
+        },
+        {
+          "name": "Paragliding",
+          "imagePath": "/images/cards/Paragliding/Paragliding"
+        },
+        {
+          "name": "Hot Air Balloon",
+          "imagePath": "/images/cards/HotAirBalloon/HotAirBalloon"
+        },
+        {
+          "name": "Snorkeling/Diving",
+          "imagePath": "/images/cards/SnorkelingDiving/SnorkelingDiving"
+        },
+        {
+          "name": "Water Sports",
+          "imagePath": "/images/cards/WaterSports/WaterSports"
+        }
+      ]
+    },
+    {
+      "category": "Places",
+      "options": [
+        {
+          "name": "Caves and Grottos",
+          "imagePath": "/images/cards/CavesGrottos/CavesGrottos"
+        },
+        {
+          "name": "Religious Places",
+          "imagePath": "/images/cards/ReligiousPlaces/ReligiousPlaces"
+        },
+        {
+          "name": "Waterfalls",
+          "imagePath": "/images/cards/Waterfalls/Waterfalls"
+        },
+        {
+          "name": "Ancient Buildings",
+          "imagePath": "/images/cards/AncientBuildings/AncientBuildings"
+        },
+        {
+          "name": "National Parks",
+          "imagePath": "/images/cards/NationalParks/NationalParks"
+        }
+      ]
+    },
+    {
+      "category": "Culture",
+      "options": [
+        {
+          "name": "Museum",
+          "imagePath": "/images/cards/Museum/Museum"
+        },
+        {
+          "name": "Gallery",
+          "imagePath": "/images/cards/Gallery/Gallery"
+        },
+        {
+          "name": "Historical Architecture",
+          "imagePath": "/images/cards/HistoricalArchitecture/HistoricalArchitecture"
+        },
+        {
+          "name": "Dancing",
+          "imagePath": "/images/cards/Dancing/Dancing"
+        },
+        {
+          "name": "Opera",
+          "imagePath": "/images/cards/Opera/Opera"
+        },
+        {
+          "name": "Theater",
+          "imagePath": "/images/cards/Theater/Theater"
+        }
+      ]
+    },
+    {
+      "category": "Nightlife",
+      "options": [
+        {
+          "name": "Bar",
+          "imagePath": "/images/cards/Bar/Bar"
+        },
+        {
+          "name": "Club",
+          "imagePath": "/images/cards/Club/Club"
+        },
+        {
+          "name": "Movie Night",
+          "imagePath": "/images/cards/MovieNight/MovieNight"
+        },
+        {
+          "name": "Live Music",
+          "imagePath": "/images/cards/LiveMusic/LiveMusic"
+        }
+      ]
+    },
+    {
+      "category": "Creativity & Workshops",
+      "options": [
+        {
+          "name": "Cooking Workshops",
+          "imagePath": "/images/cards/CookingWorkshops/CookingWorkshops"
+        },
+        {
+          "name": "Handcraft Workshops",
+          "imagePath": "/images/cards/HandcraftWorkshops/HandcraftWorkshops"
+        },
+        {
+          "name": "Photo Tour",
+          "imagePath": "/images/cards/PhotoTour/PhotoTour"
+        }
+      ]
+    },
+    {
+      "category": "Relax",
+      "options": [
+        {
+          "name": "Spa",
+          "imagePath": "/images/cards/Spa/Spa"
+        },
+        {
+          "name": "Hamam",
+          "imagePath": "/images/cards/Hamam/Hamam"
+        },
+        {
+          "name": "Massage",
+          "imagePath": "/images/cards/Massage/Massage"
+        },
+        {
+          "name": "Beach Rest",
+          "imagePath": "/images/cards/BeachRest/BeachRest"
+        }
+      ]
+    }
+  ]
+}
