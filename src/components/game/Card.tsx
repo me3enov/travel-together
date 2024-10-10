@@ -6,8 +6,6 @@ import { RootState } from '@/store';
 import { placeToken, removeToken } from '@/store/slices/tokenSlice';
 import { CardProps } from '@/types';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
 const Card: FC<CardProps> = ({ name, imagePath, index }) => {
   const dispatch = useDispatch();
   const card = useSelector((state: RootState) =>
@@ -27,9 +25,9 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
 
   const tokenIcon =
     card?.token === 1
-      ? `${basePath}/icons/token1.svg`
+      ? `/travel-together/icons/token1.svg`
       : card?.token === 2
-        ? `${basePath}/icons/token2.svg`
+        ? `/travel-together/icons/token2.svg`
         : null;
 
   const areTokensAvailable =
@@ -63,7 +61,7 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
         >
           {imagePath ? (
             <Image
-              src={`${basePath}${imagePath}@2x.png`} // Добавляем basePath к пути
+              src={`/travel-together/${imagePath}@2x.png`} // Добавляем basePath к пути
               alt={name}
               width={212}
               height={324}

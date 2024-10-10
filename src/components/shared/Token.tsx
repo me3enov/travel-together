@@ -1,8 +1,6 @@
 import { FC } from 'react';
 import Image from 'next/image';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
 export interface TokenProps {
   value: number;
   count: number;
@@ -11,8 +9,8 @@ export interface TokenProps {
 const Token: FC<TokenProps> = ({ value, count }) => {
   const iconSrc =
     value === 1
-      ? `${basePath}/icons/token1.svg`
-      : `${basePath}/icons/token2.svg`;
+      ? `/travel-together/icons/token1.svg`
+      : `/travel-together/icons/token2.svg`;
 
   return (
     <div className="flex items-center space-x-2">

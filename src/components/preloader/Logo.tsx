@@ -1,11 +1,9 @@
 import { FC } from 'react';
 import Image from 'next/image';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
 const Logo: FC = () => (
   <Image
-    src={`${basePath}/images/logo/logo.png`}
+    src={`/travel-together/images/logo/logo.png`}
     alt="Travel Together Logo"
     width={320}
     height={200}
