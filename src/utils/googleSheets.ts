@@ -5,7 +5,7 @@ interface SheetData {
 }
 
 const GOOGLE_APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbzqStMmpBXQhI3q1NLLAr8oI_2t7k-bTLVW-b-uD3HThIKn_ujn-ZjQCsY0tKGvE2jJ/exec'; // Вставьте URL Google Apps Script
+  'https://script.google.com/macros/s/AKfycbyu_QvNynTLd7Axt2G_tZzrG6nRTVMjV57ysvCIgD31itu6znnOkajS97FzZ0-oa_As/exec';
 
 export const saveToGoogleSheets = async (data: SheetData) => {
   try {
@@ -21,6 +21,7 @@ export const saveToGoogleSheets = async (data: SheetData) => {
       throw new Error('Ошибка при сохранении данных в Google Sheets');
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Ошибка отправки данных в Google Sheets:', error);
   }
 };
