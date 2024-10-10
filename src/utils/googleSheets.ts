@@ -5,7 +5,7 @@ interface SheetData {
 }
 
 const GOOGLE_APPS_SCRIPT_URL =
-  'https://script.google.com/macros/library/d/1djQpC8Ct9RZ3CkmPfOHIrppzmqHOd_acMbkhcrEiuPeoZ1t64MUMdlLX/3'; // Вставьте URL Google Apps Script
+  'https://script.google.com/macros/s/AKfycbzqStMmpBXQhI3q1NLLAr8oI_2t7k-bTLVW-b-uD3HThIKn_ujn-ZjQCsY0tKGvE2jJ/exec'; // Вставьте URL Google Apps Script
 
 export const saveToGoogleSheets = async (data: SheetData) => {
   try {
