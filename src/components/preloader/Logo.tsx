@@ -1,9 +1,13 @@
 import { FC } from 'react';
 import Image from 'next/image';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+const basePath = publicRuntimeConfig.basePath || '';
 
 const Logo: FC = () => (
   <Image
-    src="/images/logo/logo.png"
+    src={`${basePath}/images/logo/logo.png`}
     alt="Travel Together Logo"
     width={320}
     height={200}

@@ -2,8 +2,8 @@
 const nextConfig = {
     output: 'export',
     reactStrictMode: true,
-    assetPrefix: '/travel-together',  // Без завершающего слэша
-    basePath: '/travel-together',     // Без завершающего слэша
+    assetPrefix: '/travel-together',
+    basePath: '/travel-together',
     images: {
         unoptimized: true,
         remotePatterns: [

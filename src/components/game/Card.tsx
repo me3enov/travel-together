@@ -2,9 +2,13 @@ import { FC } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import getConfig from 'next/config'; // Импорт для получения basePath
 import { RootState } from '@/store';
 import { placeToken, removeToken } from '@/store/slices/tokenSlice';
 import { CardProps } from '@/types';
+
+const { publicRuntimeConfig } = getConfig();
+const basePath = publicRuntimeConfig.basePath || '';
 
 const Card: FC<CardProps> = ({ name, imagePath, index }) => {
   const dispatch = useDispatch();
@@ -25,9 +29,9 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
 
   const tokenIcon =
     card?.token === 1
-      ? '/icons/token1.svg'
+      ? `${basePath}/icons/token1.svg`
       : card?.token === 2
-        ? '/icons/token2.svg'
+        ? `${basePath}/icons/token2.svg`
         : null;
 
   const areTokensAvailable =
@@ -61,7 +65,7 @@ const Card: FC<CardProps> = ({ name, imagePath, index }) => {
         >
           {imagePath ? (
             <Image
-              src={`${imagePath}@2x.png`}
+              src={`${basePath}${imagePath}@2x.png`} // Добавляем basePath к пути
               alt={name}
               width={212}
               height={324}
