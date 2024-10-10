@@ -4,6 +4,9 @@ const nextConfig = {
     reactStrictMode: true,
     assetPrefix: '/travel-together',
     basePath: '/travel-together',
+    publicRuntimeConfig: {
+        basePath: '/travel-together',
+    },
     images: {
         unoptimized: true,
         remotePatterns: [
