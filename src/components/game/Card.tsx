@@ -2,13 +2,11 @@ import { FC } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import getConfig from 'next/config'; // Импорт для получения basePath
 import { RootState } from '@/store';
 import { placeToken, removeToken } from '@/store/slices/tokenSlice';
 import { CardProps } from '@/types';
 
-const { publicRuntimeConfig } = getConfig();
-const basePath = publicRuntimeConfig.basePath || '';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 const Card: FC<CardProps> = ({ name, imagePath, index }) => {
   const dispatch = useDispatch();
