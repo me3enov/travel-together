@@ -100,6 +100,7 @@ const RescuePageClient: FC = () => {
       saveToLocalStorage('permanentCards', [...permanentCards, ...finalCards]);
 
       window.history.replaceState(null, '', `/result`);
+      router.push(`/result`);
     } else {
       const nextRound = parseInt(roundParam) + 1;
       Cookies.set('currentRound', nextRound.toString());
