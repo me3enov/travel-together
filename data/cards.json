@@ -43,6 +43,10 @@
         {
           "name": "Camping",
           "imagePath": "/images/cards/Camping/Camping"
+        },
+        {
+          "name": "Condo",
+          "imagePath": "/images/cards/Camping/Condo"
         }
       ]
     },
