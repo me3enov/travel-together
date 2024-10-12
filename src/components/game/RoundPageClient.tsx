@@ -45,6 +45,16 @@ const RoundPageClient = () => {
   const currentPreferences =
     roundParam === '1' ? cardsData.preferences : cardsData.leisureCategories;
 
+  const category = (() => {
+    if (roundParam === '1' || roundParam === '2') {
+      return (
+        currentPreferences[parseInt(selectionParam) - 1]?.category || 'Mix'
+      );
+    } else {
+      return shuffledCards.length > 0 ? 'Mix' : 'Mix';
+    }
+  })();
+
   useEffect(() => {
     const nameFromCookie = Cookies.get('playerName');
     if (nameFromCookie) {
@@ -215,7 +225,7 @@ const RoundPageClient = () => {
 
       <div className="flex-grow flex flex-col items-center justify-center bg-gradient-to-b from-[#C2E59C] to-[#64B3F4] space-y-8 pt-16 pb-16">
         <RoundHeader
-          roundTitle={`Round ${roundParam}.${selectionParam}`}
+          roundTitle={`Round ${roundParam}.${selectionParam} : ${category}`}
           subtitle={
             tokens.first + tokens.second === 0
               ? 'Great!'
